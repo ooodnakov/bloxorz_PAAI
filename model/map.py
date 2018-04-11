@@ -1,0 +1,4 @@
+"""Map"""
+
+class maps:
+    pass
