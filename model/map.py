@@ -99,28 +99,39 @@ class maps:
                 self.maps[int(one.location[0])][int(one.location[1])] = gettile
         if len(self.Brid) != 0:
             for one in self.Brid:
-                if one.type == 1:
+                if one.type == 1: # One tile
                     gettile = self.maps[int(one.location[0][0])][int(one.location[0][1])]
+                    if one.active is True:
+                        gettile.type = 1
+                    else: gettile.type = 0
                     gettile.set_obj(one)
                     self.maps[int(one.location[0][0])][int(one.location[0][1])] = gettile
-                elif one.type == 2:
+                elif one.type == 2: # Two tile
                     gettile = self.maps[int(one.location[0][0])][int(one.location[0][1])]
+                    if one.active is True:
+                        gettile.type = 1
+                    else: gettile.type = 0
                     gettile.set_obj(one)
                     self.maps[int(one.location[0][0])][int(one.location[0][1])] = gettile
+
                     gettile = self.maps[int(one.location[1][0])][int(one.location[1][1])]
+                    if one.active is True:
+                        gettile.type = 1
+                    else: gettile.type = 0
                     gettile.set_obj(one)
                     self.maps[int(one.location[1][0])][int(one.location[1][1])] = gettile
         
         # Load current box
         stateBox = len(self.current_box.location)
-        if stateBox == 1:
+        if stateBox == 1: # Nam doc
             gettile = self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])]
             gettile.set_obj(self.current_box)
             self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])] = gettile
-        elif stateBox == 2:
+        elif stateBox == 2: # Nam ngang
             gettile = self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])]
             gettile.set_obj(self.current_box)
             self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])] = gettile
+
             gettile = self.maps[int(self.current_box.location[1][0])][int(self.current_box.location[1][1])]
             gettile.set_obj(self.current_box)
             self.maps[int(self.current_box.location[1][0])][int(self.current_box.location[1][1])] = gettile
