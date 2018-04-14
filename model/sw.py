@@ -44,7 +44,7 @@ class swX:
     def set_bridge(self, bridge):
         self.bridge = bridge
 
-    def change_active(self, box=None):
+    def change_active(self):
         self.active = not self.active
         # active lien tuc
         if self.type == 0: 

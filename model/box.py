@@ -8,6 +8,18 @@ class Box:
 
     def change_state(self):
         pass
+
+    def move_up(self, maps):
+        pass
+    
+    def move_right(self, maps):
+        pass
+    
+    def move_left(self, maps):
+        pass
+
+    def move_down(self, maps):
+        pass
     
     def get_locaton(self):
         return self.location

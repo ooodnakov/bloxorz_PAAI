@@ -49,10 +49,13 @@ class maps:
             self.__loadSWO()
             # Load Maps
             self.__loadMap()
+            # Update Maps
+            self.updateMaps()
 
         else: print("Path_to_level not None")
     
     def __loadMap(self):
+        # Load tiles to Maps
         maps = self.jsonObj["maps"]
         for i in range(self.size[0]):
             line = []
@@ -70,17 +73,25 @@ class maps:
                     newtile = tile(1, None, [i, j])
                     line.append(newtile)
             self.maps.append(line)
-        
+        # Load Start Box to Maps
+        gettile = self.maps[int(self.start[0])][int(self.start[1])]
+        gettile.set_obj(self.current_box)
+        self.maps[int(self.start[0])][int(self.start[1])] = gettile
+
+    def updateMaps(self):
+        # Load swO to Maps
         if len(self.swO) != 0:
             for one in self.swO:
                 gettile = self.maps[int(one.location[0])][int(one.location[1])]
                 gettile.set_obj(one)
                 self.maps[int(one.location[0])][int(one.location[1])] = gettile
+        # Load swQ to Maps
         if len(self.swQ) != 0:
             for one in self.swQ:
                 gettile = self.maps[int(one.location[0])][int(one.location[1])]
                 gettile.set_obj(one)
                 self.maps[int(one.location[0])][int(one.location[1])] = gettile
+        # Load swX to Maps
         if len(self.swX) != 0:
             for one in self.swX:
                 gettile = self.maps[int(one.location[0])][int(one.location[1])]
@@ -100,12 +111,20 @@ class maps:
                     gettile.set_obj(one)
                     self.maps[int(one.location[1][0])][int(one.location[1][1])] = gettile
         
-        # Start Box
-        gettile = self.maps[int(self.start[0])][int(self.start[1])]
-        gettile.set_obj(self.current_box)
-        self.maps[int(self.start[0])][int(self.start[1])] = gettile
-
-                
+        # Load current box
+        stateBox = len(self.current_box.location)
+        if stateBox == 1:
+            gettile = self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])]
+            gettile.set_obj(self.current_box)
+            self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])] = gettile
+        elif stateBox == 2:
+            gettile = self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])]
+            gettile.set_obj(self.current_box)
+            self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])] = gettile
+            gettile = self.maps[int(self.current_box.location[1][0])][int(self.current_box.location[1][1])]
+            gettile.set_obj(self.current_box)
+            self.maps[int(self.current_box.location[1][0])][int(self.current_box.location[1][1])] = gettile
+         
     def __loadSWX(self):
         swXObj = self.jsonObj["swX"]
         count = int(swXObj["count"])
