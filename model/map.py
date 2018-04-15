@@ -173,13 +173,11 @@ class maps:
         return True
 
     def check_win(self):
-        box = self.current_box
-        if len(box.location) == 1:
-            if self.end == box.location[0]:
+        if len(self.current_box.location) == 1:
+            if self.end == self.current_box.location[0]:
                 return True
         return False
             
-
     def __check_live(self, box):
         if len(box.location) == 1:
             y1 = box.location[0][0]

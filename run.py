@@ -7,33 +7,26 @@ from model.bridge import Bridge
 import os
 
 def logic(maps_object):
+    result = True
     while 1:
         number = input("Nhap Buoc Di:")
         if number == "5":
             maps_object.current_box.move_up()
-            res = maps_object.refreshBox()
-            if res == False:
-                print("GAME OVER!")
-                break
+            result = maps_object.refreshBox()
         elif number == "2":
             maps_object.current_box.move_down()
-            res = maps_object.refreshBox()
-            if res == False:
-                print("GAME OVER!")
-                break
+            result = maps_object.refreshBox()
         elif number == "1":
             maps_object.current_box.move_left()
-            res = maps_object.refreshBox()
-            if res == False:
-                print("GAME OVER!")
-                break
+            result = maps_object.refreshBox()
         elif number == "3":
             maps_object.current_box.move_right()
-            res = maps_object.refreshBox()
-            if res == False:
-                print("GAME OVER!")
-                break
-        os.system('cls')
+            result = maps_object.refreshBox()
+
+        if result == False:
+            print("GAME OVER!")
+            break
+        os.system('clear')
         maps_object.print_current()
         if maps_object.check_win():
             print("WINNER!")
