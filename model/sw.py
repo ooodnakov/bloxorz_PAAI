@@ -33,8 +33,6 @@ class swQ:
     def get_location(self):
         return self.location
 
-    def set_map(self, map):
-        pass
             
 class swX:
     """Switch X"""
@@ -63,9 +61,6 @@ class swX:
 
     def get_location(self):
         return self.location
-
-    def set_map(self, map):
-        pass
 
 
 class swO:
@@ -104,9 +99,6 @@ class swO:
 
     def get_location(self):
         return self.location
-
-    def set_map(self, map):
-        pass
 
 
 

@@ -53,7 +53,7 @@
       "split": true,
       "active": 1,
       "box1": {
-        "state": 3,
+        "state": 1,
         "symbol": "#1",
         "location": [
           2,
@@ -61,7 +61,7 @@
         ]
       },
       "box2": {
-        "state": 3,
+        "state": 1,
         "symbol": "#2",
         "location": [
           2,
@@ -112,7 +112,7 @@
   "start": [1,1],
   "end": [3,8],
   "box": {
-    "state": 1,
+    "state": 2,
     "symbol": "#",
     "location": [
       [

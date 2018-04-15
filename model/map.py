@@ -82,27 +82,27 @@ class maps:
         gettile.set_obj(self.current_box)
         self.maps[int(self.start[0])][int(self.start[1])] = gettile
 
-    def __updateMaps(self, key):
+    def __updateMaps(self, key=None):
         # Load swO to Maps
-        if len(self.swO) != 0 and (key==0 or key=="all"):
+        if len(self.swO) != 0 and key=="all":
             for one in self.swO:
                 gettile = self.maps[int(one.location[0])][int(one.location[1])]
                 gettile.set_obj(one)
                 self.maps[int(one.location[0])][int(one.location[1])] = gettile
         # Load swQ to Maps
-        if len(self.swQ) != 0 and (key==1 or key=="all"):
+        if len(self.swQ) != 0 and key=="all":
             for one in self.swQ:
                 gettile = self.maps[int(one.location[0])][int(one.location[1])]
                 gettile.set_obj(one)
                 self.maps[int(one.location[0])][int(one.location[1])] = gettile
         # Load swX to Maps
-        if len(self.swX) != 0 and (key==2 or key=="all"):
+        if len(self.swX) != 0 and key=="all":
             for one in self.swX:
                 gettile = self.maps[int(one.location[0])][int(one.location[1])]
                 gettile.set_obj(one)
                 self.maps[int(one.location[0])][int(one.location[1])] = gettile
 
-        if len(self.Brid) != 0 and (key==1 or key==2 or key=="all"):
+        if len(self.Brid) != 0:
             for one in self.Brid:
                 if one.type == 1: # One tile
                     gettile = self.maps[int(one.location[0][0])][int(one.location[0][1])]
@@ -147,24 +147,78 @@ class maps:
             if one.symbol == swXObj.symbol:
                 self.swX[self.swX.index(one)].active = swXObj.active
                 self.__updateBrid(swXObj.bridge)
-                self.__updateMaps(2)
+                self.__updateMaps()
     
     def updateSWQ(self, swQObj):
         for one in self.swQ:
             if one.symbol == swQObj.symbol:
                 self.swQ[self.swQ.index(one)].active = swQObj.active
                 self.__updateBrid(swQObj.bridge)
-                self.__updateMaps(1)
+                self.__updateMaps()
     
     def updateSWO(self, swOObj):
         for one in self.swO:
             if one.symbol == swOObj.symbol:
                 self.swO[self.swO.index(one)] = swOObj
-                self.__updateMaps(0)
+                self.__updateMaps()
     
-    def updatBox(self, location):
-        self.current_box.change_location(location)
-    
+    def refreshBox(self):
+        self.__cleanOldBox()
+        try:
+            if self.__check_live(self.current_box) == False:
+                return False
+            self.__updateMaps(key=3)
+        except:
+            return False
+        return True
+
+    def check_win(self):
+        box = self.current_box
+        if len(box.location) == 1:
+            if self.end == box.location[0]:
+                return True
+        return False
+            
+
+    def __check_live(self, box):
+        if len(box.location) == 1:
+            y1 = box.location[0][0]
+            x1 = box.location[0][1]
+            obj = self.maps[y1][x1]
+            res = obj.check_live(box)
+            return res
+        elif len(box.location) == 2:
+            for child in box.location:
+                y1 = child[0]
+                x1 = child[1]
+                obj = self.maps[y1][x1]
+                res = obj.check_live(box)
+                if res == False:
+                    return False
+            return True
+
+    def __cleanOldBox(self):
+        oldBox = self.current_box.pre_location
+        stateBox = len(oldBox)
+        if stateBox == 1: # Nam doc
+            gettile = self.maps[int(oldBox[0][0])][int(oldBox[0][1])]
+            if gettile.location == self.end:
+                gettile.set_obj(Box("$", None, [gettile.location]))
+            else: gettile.set_obj(None)
+            self.maps[int(oldBox[0][0])][int(oldBox[0][1])] = gettile
+        elif stateBox == 2: # Nam ngang
+            gettile = self.maps[int(oldBox[0][0])][int(oldBox[0][1])]
+            if gettile.location == self.end:
+                gettile.set_obj(Box("$", None, [gettile.location]))
+            else: gettile.set_obj(None)
+            self.maps[int(oldBox[0][0])][int(oldBox[0][1])] = gettile
+
+            gettile = self.maps[int(oldBox[1][0])][int(oldBox[1][1])]
+            if gettile.location == self.end:
+                gettile.set_obj(Box("$", None, [gettile.location]))
+            else: gettile.set_obj(None)
+            self.maps[int(oldBox[1][0])][int(oldBox[1][1])] = gettile
+        
     def __updateBrid(self, bridObj):
         for one in self.Brid:
             if one.symbol == bridObj.symbol:
@@ -219,12 +273,6 @@ class maps:
                 self.swO.append(newswO)
 
     def print_current(self):
-        print("x: switch X")
-        print("q: switch Bat Giac")
-        print("o: switch Tach đoi Box")
-        print("c: Cau noi")
-        print("#: Start game")
-        print("$: End game")
         for i in self.maps:
             print("------" * self.size[1])
             print('{0: <3}'.format("|"), end='')
@@ -232,8 +280,8 @@ class maps:
                 if j.type == 0:
                     content = " "
                     if j.obj != None:
-                        if j.obj.symbol == "$":
-                            content="$"
+                        if j.obj.symbol == "$" or j.obj.symbol == "#":
+                            content=j.obj.symbol
                 elif j.type == 1 or j.type == 2:
                     if j.obj != None:
                         content = j.obj.symbol
