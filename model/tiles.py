@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """Tiles"""
 class tile:
     def __init__(self, typ, obj, location):

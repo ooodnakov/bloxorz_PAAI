@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """Box"""
 class Box:
     def __init__(self, symbol, state, location):
@@ -23,6 +25,10 @@ class Box:
     
     def get_locaton(self):
         return self.location
+    
+    def change_location(self, location):
+        self.location = location
+        self.state = len(location)
 
     def on(self):
         self.active = True
