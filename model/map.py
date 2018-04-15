@@ -6,7 +6,11 @@ from model.sw import swO, swQ, swX
 from model.box import Box
 from model.bridge import Bridge
 from model.tiles import tile
-
+class goal:
+    def __init__(self, symbol, location):
+        self.symbol = symbol
+        self.location = location
+        
 class maps:
     def __init__(self, path_to_level=None):
         self.files = None
@@ -71,76 +75,59 @@ class maps:
                 elif maps[i][j] == self.types_tile[2]: # space title
                     newtile = tile(0, None, [i, j])
                     if self.end == [i, j]:
-                        newtile.set_obj(Box("$", None, [[i, j]])) # End game
+                        newtile.set_obj(goal("$", [i, j])) # End game
                     line.append(newtile)
                 else:
                     newtile = tile(1, None, [i, j])
                     line.append(newtile)
             self.maps.append(line)
         # Load Start Box to Maps
-        gettile = self.maps[int(self.start[0])][int(self.start[1])]
-        gettile.set_obj(self.current_box)
-        self.maps[int(self.start[0])][int(self.start[1])] = gettile
+        self.maps[int(self.start[0])][int(self.start[1])].set_obj(self.current_box)
 
     def __updateMaps(self, key=None):
         # Load swO to Maps
         if len(self.swO) != 0 and key=="all":
             for one in self.swO:
-                gettile = self.maps[int(one.location[0])][int(one.location[1])]
-                gettile.set_obj(one)
-                self.maps[int(one.location[0])][int(one.location[1])] = gettile
+                self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
         # Load swQ to Maps
         if len(self.swQ) != 0 and key=="all":
             for one in self.swQ:
-                gettile = self.maps[int(one.location[0])][int(one.location[1])]
-                gettile.set_obj(one)
-                self.maps[int(one.location[0])][int(one.location[1])] = gettile
+                self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
         # Load swX to Maps
         if len(self.swX) != 0 and key=="all":
             for one in self.swX:
-                gettile = self.maps[int(one.location[0])][int(one.location[1])]
-                gettile.set_obj(one)
-                self.maps[int(one.location[0])][int(one.location[1])] = gettile
+                self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
 
         if len(self.Brid) != 0:
             for one in self.Brid:
                 if one.type == 1: # One tile
-                    gettile = self.maps[int(one.location[0][0])][int(one.location[0][1])]
                     if one.active is True:
-                        gettile.type = 1
-                    else: gettile.type = 0
-                    gettile.set_obj(one)
-                    self.maps[int(one.location[0][0])][int(one.location[0][1])] = gettile
+                        self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 1
+                    else: 
+                        self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 0
+                    self.maps[int(one.location[0][0])][int(one.location[0][1])].set_obj(one)
                 elif one.type == 2: # Two tile
-                    gettile = self.maps[int(one.location[0][0])][int(one.location[0][1])]
                     if one.active is True:
-                        gettile.type = 1
-                    else: gettile.type = 0
-                    gettile.set_obj(one)
-                    self.maps[int(one.location[0][0])][int(one.location[0][1])] = gettile
-
-                    gettile = self.maps[int(one.location[1][0])][int(one.location[1][1])]
+                        self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 1
+                    else: 
+                        self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 0
+                    self.maps[int(one.location[0][0])][int(one.location[0][1])].set_obj(one)
+ 
                     if one.active is True:
-                        gettile.type = 1
-                    else: gettile.type = 0
-                    gettile.set_obj(one)
-                    self.maps[int(one.location[1][0])][int(one.location[1][1])] = gettile
+                        self.maps[int(one.location[1][0])][int(one.location[1][1])].type = 1
+                    else: 
+                        self.maps[int(one.location[1][0])][int(one.location[1][1])].type = 0
+                    self.maps[int(one.location[1][0])][int(one.location[1][1])].set_obj(one)
         
-        # Load current box
+        # Loads current box to Maps
         if key==3 or key=="all":
-            stateBox = len(self.current_box.location)
-            if stateBox == 1: # Nam doc
-                gettile = self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])]
-                gettile.set_obj(self.current_box)
-                self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])] = gettile
-            elif stateBox == 2: # Nam ngang
-                gettile = self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])]
-                gettile.set_obj(self.current_box)
-                self.maps[int(self.current_box.location[0][0])][int(self.current_box.location[0][1])] = gettile
-
-                gettile = self.maps[int(self.current_box.location[1][0])][int(self.current_box.location[1][1])]
-                gettile.set_obj(self.current_box)
-                self.maps[int(self.current_box.location[1][0])][int(self.current_box.location[1][1])] = gettile
+            curr_location = self.current_box.location
+            stateBox = len(curr_location)
+            if stateBox == 1: 
+                self.maps[int(curr_location[0][0])][int(curr_location[0][1])].set_obj(self.current_box)
+            elif stateBox == 2: 
+                self.maps[int(curr_location[0][0])][int(curr_location[0][1])].set_obj(self.current_box)
+                self.maps[int(curr_location[1][0])][int(curr_location[1][1])].set_obj(self.current_box)
 
     def updateSWX(self, swXObj):
         for one in self.swX:
@@ -198,22 +185,22 @@ class maps:
     def __cleanOldBox(self):
         oldBox = self.current_box.pre_location
         stateBox = len(oldBox)
-        if stateBox == 1: # Nam doc
+        if stateBox == 1: 
             gettile = self.maps[int(oldBox[0][0])][int(oldBox[0][1])]
             if gettile.location == self.end:
-                gettile.set_obj(Box("$", None, [gettile.location]))
+                gettile.set_obj(goal("$", self.end))
             else: gettile.set_obj(None)
             self.maps[int(oldBox[0][0])][int(oldBox[0][1])] = gettile
-        elif stateBox == 2: # Nam ngang
+        elif stateBox == 2: 
             gettile = self.maps[int(oldBox[0][0])][int(oldBox[0][1])]
             if gettile.location == self.end:
-                gettile.set_obj(Box("$", None, [gettile.location]))
+                gettile.set_obj(goal("$", self.end))
             else: gettile.set_obj(None)
             self.maps[int(oldBox[0][0])][int(oldBox[0][1])] = gettile
 
             gettile = self.maps[int(oldBox[1][0])][int(oldBox[1][1])]
             if gettile.location == self.end:
-                gettile.set_obj(Box("$", None, [gettile.location]))
+                gettile.set_obj(goal("$", self.end))
             else: gettile.set_obj(None)
             self.maps[int(oldBox[1][0])][int(oldBox[1][1])] = gettile
         

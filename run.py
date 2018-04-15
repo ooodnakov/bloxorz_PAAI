@@ -6,7 +6,16 @@ from model.sw import swO, swQ, swX
 from model.bridge import Bridge
 import os
 
-def logic(maps_object):
+def dfs(maps_object):
+    pass
+
+def bfs(maps_object):
+    pass
+
+def hill_climbing(maps_object):
+    pass
+
+def handle(maps_object):
     result = True
     while 1:
         number = input("Nhap Buoc Di:")
@@ -33,7 +42,7 @@ def logic(maps_object):
             break
     
 if __name__=="__main__":
-    test =  maps("./level/demo2.json")
-    test.print_current()
-    logic(test)
+    level =  maps("./level/demo2.json")
+    level.print_current()
+    handle(level)
 
