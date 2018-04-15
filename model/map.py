@@ -82,7 +82,7 @@ class maps:
                     line.append(newtile)
             self.maps.append(line)
         # Load Start Box to Maps
-        self.maps[int(self.start[0])][int(self.start[1])].set_obj(self.current_box)
+        self.maps[int(self.start[0])][int(self.start[1])].set_box(self.current_box)
 
     def __updateMaps(self, key=None):
         # Load swO to Maps
@@ -124,10 +124,10 @@ class maps:
             curr_location = self.current_box.location
             stateBox = len(curr_location)
             if stateBox == 1: 
-                self.maps[int(curr_location[0][0])][int(curr_location[0][1])].set_obj(self.current_box)
+                self.maps[int(curr_location[0][0])][int(curr_location[0][1])].set_box(self.current_box)
             elif stateBox == 2: 
-                self.maps[int(curr_location[0][0])][int(curr_location[0][1])].set_obj(self.current_box)
-                self.maps[int(curr_location[1][0])][int(curr_location[1][1])].set_obj(self.current_box)
+                self.maps[int(curr_location[0][0])][int(curr_location[0][1])].set_box(self.current_box)
+                self.maps[int(curr_location[1][0])][int(curr_location[1][1])].set_box(self.current_box)
 
     def updateSWX(self, swXObj):
         for one in self.swX:
@@ -186,23 +186,10 @@ class maps:
         oldBox = self.current_box.pre_location
         stateBox = len(oldBox)
         if stateBox == 1: 
-            gettile = self.maps[int(oldBox[0][0])][int(oldBox[0][1])]
-            if gettile.location == self.end:
-                gettile.set_obj(goal("$", self.end))
-            else: gettile.set_obj(None)
-            self.maps[int(oldBox[0][0])][int(oldBox[0][1])] = gettile
-        elif stateBox == 2: 
-            gettile = self.maps[int(oldBox[0][0])][int(oldBox[0][1])]
-            if gettile.location == self.end:
-                gettile.set_obj(goal("$", self.end))
-            else: gettile.set_obj(None)
-            self.maps[int(oldBox[0][0])][int(oldBox[0][1])] = gettile
-
-            gettile = self.maps[int(oldBox[1][0])][int(oldBox[1][1])]
-            if gettile.location == self.end:
-                gettile.set_obj(goal("$", self.end))
-            else: gettile.set_obj(None)
-            self.maps[int(oldBox[1][0])][int(oldBox[1][1])] = gettile
+            self.maps[int(oldBox[0][0])][int(oldBox[0][1])].set_box(None)
+        elif stateBox == 2:
+            self.maps[int(oldBox[0][0])][int(oldBox[0][1])].set_box(None)
+            self.maps[int(oldBox[1][0])][int(oldBox[1][1])].set_box(None)
         
     def __updateBrid(self, bridObj):
         for one in self.Brid:
@@ -264,12 +251,18 @@ class maps:
             for j in i:
                 if j.type == 0:
                     content = " "
-                    if j.obj != None:
-                        if j.obj.symbol == "$" or j.obj.symbol == "#":
-                            content=j.obj.symbol
+                    if j.obj != None and j.box != None:
+                        content = j.box.symbol
+                    elif j.obj != None and j.box == None:
+                        if j.obj.symbol == "$":
+                            content = "$"
                 elif j.type == 1 or j.type == 2:
-                    if j.obj != None:
+                    if j.obj != None and j.box != None:
+                        content = j.box.symbol
+                    elif j.obj != None and j.box == None: 
                         content = j.obj.symbol
+                    elif j.obj == None and j.box != None:
+                        content = j.box.symbol
                     else: content = j.type
                 print('{0: <2}'.format(content),"|", end='')
                 print('{0: <2}'.format(""), end='')
