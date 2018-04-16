@@ -12,16 +12,20 @@ class tile:
         for child in box.location:
             if child == self.location:
                 # Space
-                if self.type == 0 and self.obj != None:
+                if self.type == 0:
+                    if self.obj != None:
                         if self.obj.symbol == "$":
                             return True
+                        else: return False
+                    else: return False
                 # Orange
-                elif self.type == 2 and not box.is_standing():
-                    return True
+                elif self.type == 2:
+                    if not box.is_standing():
+                        return True
+                    else: return False
                 # Rock
                 elif self.type == 1: 
                     return True
-        return False
 
     def get_location(self):
         return self.location

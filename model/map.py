@@ -116,32 +116,51 @@ class maps:
                     else: 
                         self.maps[int(one.location[1][0])][int(one.location[1][1])].type = 0
                     self.maps[int(one.location[1][0])][int(one.location[1][1])].set_obj(one)
-        
-    def updateSWX(self, swXObj):
+    
+    def refreshBox(self):
+        if not self.__check_isFloor(self.current_box):
+            self.current_box.location = self.current_box.pre_location
+            return False
+        self.__checkSWQ()
+        self.__checkSWX()
+        return True
+
+    def __checkSWQ(self):
+        if len(self.swQ) != 0:
+            for one in self.current_box.location:
+                for obj in self.swQ:
+                    if obj.location == one:
+                        obj.change_active()
+                        self.__updateSWQ(obj)
+
+    def __checkSWX(self):
+        if len(self.swX) != 0:
+            for one in self.current_box.location:
+                for obj in self.swX:
+                    if obj.location == one and self.current_box.is_doubleBox() and self.current_box.is_standing():
+                        obj.change_active()
+                        self.__updateSWX(obj)
+                    else: return
+
+    def __updateSWX(self, swXObj):
         for one in self.swX:
             if one.symbol == swXObj.symbol:
                 self.swX[self.swX.index(one)].active = swXObj.active
                 self.__updateBrid(swXObj.bridge)
                 self.updateMaps(3)
     
-    def updateSWQ(self, swQObj):
+    def __updateSWQ(self, swQObj):
         for one in self.swQ:
             if one.symbol == swQObj.symbol:
                 self.swQ[self.swQ.index(one)].active = swQObj.active
                 self.__updateBrid(swQObj.bridge)
                 self.updateMaps(2)
     
-    def updateSWO(self, swOObj):
+    def __updateSWO(self, swOObj):
         for one in self.swO:
             if one.symbol == swOObj.symbol:
                 self.swO[self.swO.index(one)] = swOObj
                 self.updateMaps(1)
-    
-    def refreshBox(self):
-        if not self.__check_isFloor(self.current_box):
-            self.current_box.location = self.current_box.pre_location
-            return False
-        return True
     
     def __is_goal(self):
         return self.end == self.current_box.location[0]
@@ -177,7 +196,7 @@ class maps:
     def __updateBrid(self, bridObj):
         for one in self.Brid:
             if one.symbol == bridObj.symbol:
-                self.Brid[self.Brid.index(one)].active = bridObj.active
+                self.Brid[self.Brid.index(one)] = bridObj
 
     def __loadSWX(self):
         swXObj = self.jsonObj["swX"]

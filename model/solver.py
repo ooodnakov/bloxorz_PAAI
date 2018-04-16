@@ -4,7 +4,11 @@ import os
 import sys
 import time
 
+
+
+
 class Control:
+    Play_handle = False
     def __init__(self, maps=None):
         if maps is None:
             print("Maps not None")
@@ -31,8 +35,10 @@ class Control:
             self.set_box(self.pre)
             return False
         else:
-            self.__update_current_locaton()
-            return self.add_stack() 
+            if not self.Play_handle:
+                self.__update_current_locaton()
+                return self.add_stack()
+            return True 
     
     def move_down(self):
         self.pre = self.current
@@ -41,8 +47,10 @@ class Control:
             self.set_box(self.pre)
             return False
         else:
-            self.__update_current_locaton()
-            return self.add_stack()
+            if not self.Play_handle:
+                self.__update_current_locaton()
+                return self.add_stack()
+            return True 
     
     def __update_current_locaton(self):
         self.current = self.maps.current_box.location
@@ -54,8 +62,10 @@ class Control:
             self.set_box(self.pre)
             return False
         else:
-            self.__update_current_locaton()
-            return self.add_stack()
+            if not self.Play_handle:
+                self.__update_current_locaton()
+                return self.add_stack()
+            return True 
     
     def move_left(self):
         self.pre = self.current
@@ -64,8 +74,10 @@ class Control:
             self.set_box(self.pre)
             return False
         else:
-            self.__update_current_locaton()
-            return self.add_stack()
+            if not self.Play_handle:
+                self.__update_current_locaton()
+                return self.add_stack()
+            return True 
 
     def check_box_on_maps(self):
         return self.maps.refreshBox()
@@ -96,14 +108,24 @@ def dfs(state: Control):
         current_state = state.stack.pop()
         for move in state.moves:
             state.set_box(current_state)
-            # state.maps.print_current()
-            # time.sleep(0.5)
-            # os.system("cls")
+            state.maps.print_current()
+            time.sleep(0.2)
+            os.system("cls")
             if move():
-                # state.maps.print_current()
+                state.maps.print_current()
                 if state.check_goal():
                     return
-            # os.system("cls")
+            os.system("cls")
+
+def dfs_recursion(state: Control):
+    if state.check_goal():
+        # state.maps.print_current()
+        return
+    current_state = state.stack.pop()
+    for move in state.moves:
+        state.set_box(current_state)
+        if move():
+            dfs_recursion(state)
 
 def bfs(state: Control):
     while state.stack:
@@ -149,6 +171,7 @@ def hill_climbing(state: Control):
     pass
 
 def handle(state: Control):
+    state.Play_handle = True
     res = True
     while 1:
         number = input("Nhap Buoc Di:")
@@ -165,7 +188,7 @@ def handle(state: Control):
         if res == False:
             print("GAME OVER!")
             break
-        os.system('clear')
+        os.system('cls')
         state.print_maps()
         if  state.check_goal():
             print("WINNER!")

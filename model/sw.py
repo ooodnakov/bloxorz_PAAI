@@ -25,10 +25,11 @@ class swQ:
             return True
         else:
         # active chi mot lan duy nhat
-            if self.bridge.check_times_active:
+            if self.bridge.check_times_active():
+                return False
+            else:
                 self.bridge.change_active()
                 return True
-            else: return False
     
     def get_location(self):
         return self.location
@@ -54,10 +55,11 @@ class swX:
             return True
         else:
             # active chi mot lan duy nhat
-            if self.bridge.check_times_active:
+            if self.bridge.check_times_active():
+                return False
+            else:
                 self.bridge.change_active()
                 return True
-            else: return False
 
     def get_location(self):
         return self.location

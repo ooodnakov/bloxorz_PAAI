@@ -11,11 +11,9 @@ class Bridge:
         self.type = len(location)
 
     def check_times_active(self):
-        if self.times_active > 0:
-            return True
-        else: return False
+        return self.times_active > 0
     
     def change_active(self):
-        self.active = not self.active
         self.times_active += 1
+        self.active = not self.active
         
