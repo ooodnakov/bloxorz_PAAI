@@ -26,8 +26,5 @@ class tile:
     def get_location(self):
         return self.location
     
-    # def set_box(self, box):
-    #     self.box = box
-    
     def set_obj(self, obj):
         self.obj = obj

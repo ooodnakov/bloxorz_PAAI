@@ -56,7 +56,7 @@ class maps:
             # Load Maps
             self.__loadMap()
             # Update Maps
-            self.updateMaps("all")
+            self.updateMaps()
 
         else: print("Path_to_level not None")
     
@@ -81,20 +81,18 @@ class maps:
                     newtile = tile(1, None, [i, j])
                     line.append(newtile)
             self.maps.append(line)
-        # Load Start Box to Maps
-        # self.maps[int(self.start[0])][int(self.start[1])].set_box(self.current_box)
 
     def updateMaps(self, key=None):
         # Load swO to Maps
-        if len(self.swO) != 0 and key=="all":
+        if len(self.swO) != 0 and (key == None or key == 1):
             for one in self.swO:
                 self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
         # Load swQ to Maps
-        if len(self.swQ) != 0 and key=="all":
+        if len(self.swQ) != 0 and (key == None or key == 2):
             for one in self.swQ:
                 self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
         # Load swX to Maps
-        if len(self.swX) != 0 and key=="all":
+        if len(self.swX) != 0 and (key == None or key == 3):
             for one in self.swX:
                 self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
 
@@ -124,20 +122,20 @@ class maps:
             if one.symbol == swXObj.symbol:
                 self.swX[self.swX.index(one)].active = swXObj.active
                 self.__updateBrid(swXObj.bridge)
-                self.updateMaps()
+                self.updateMaps(3)
     
     def updateSWQ(self, swQObj):
         for one in self.swQ:
             if one.symbol == swQObj.symbol:
                 self.swQ[self.swQ.index(one)].active = swQObj.active
                 self.__updateBrid(swQObj.bridge)
-                self.updateMaps()
+                self.updateMaps(2)
     
     def updateSWO(self, swOObj):
         for one in self.swO:
             if one.symbol == swOObj.symbol:
                 self.swO[self.swO.index(one)] = swOObj
-                self.updateMaps()
+                self.updateMaps(1)
     
     def refreshBox(self):
         if not self.__check_isFloor(self.current_box):
@@ -223,8 +221,7 @@ class maps:
             for sym in symbol:
                 symObj = swOObj[sym]
                 newswO = swO(sym, symObj["location"], symObj["split"])
-                box1 = symObj["box1"]
-                box2 = symObj["box2"]
+                box1, box2 =  symObj["box1"], symObj["box2"]
                 newswO.set_box1(box1["symbol"], box1["state"], box1["location"])
                 newswO.set_box2(box2["symbol"], box2["state"], box2["location"])
                 self.swO.append(newswO)

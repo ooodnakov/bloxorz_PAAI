@@ -22,7 +22,7 @@ class Control:
         self.stack = [self.start]
         self.visted = [self.start]
         
-        self.moves = (self.move_up, self.move_down, self.move_right, self.move_left)
+        self.moves = (self.move_right, self.move_down, self.move_up, self.move_left)
 
     def move_up(self):
         self.pre = self.current
@@ -98,12 +98,12 @@ def dfs(state: Control):
             state.set_box(current_state)
             # state.maps.print_current()
             # time.sleep(0.5)
-            os.system("cls")
+            # os.system("cls")
             if move():
                 # state.maps.print_current()
                 if state.check_goal():
                     return
-            os.system("cls")
+            # os.system("cls")
 
 def bfs(state: Control):
     while state.stack:
@@ -112,10 +112,12 @@ def bfs(state: Control):
             state.set_box(current_state)
             # state.maps.print_current()
             # time.sleep(0.5)
+            # os.system("cls")
             if move():
                 # state.maps.print_current()
                 if state.check_goal():
                     return
+            # os.system("cls")
 
 def dfs_path(state: Control):
     stack = [[state.current], ]
@@ -143,7 +145,6 @@ def bfs_path(state: Control):
                     return result
                 stack.append(path + [state.current])
     
-
 def hill_climbing(state: Control):
     pass
 
