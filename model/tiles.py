@@ -9,14 +9,17 @@ class tile:
         self.box = None
         self.location = location
     
-    def check_live(self, box):
+    def check_life(self, box):
         for child in box.location:
             if child == self.location:
+                # Space
                 if self.type == 0 and self.obj != None:
                         if self.obj.symbol == "$":
                             return True
-                elif self.type == 2 and len(box.location) == 2:
+                # Orange
+                elif self.type == 2 and not box.is_standing():
                     return True
+                # Rock
                 elif self.type == 1: 
                     return True
         return False

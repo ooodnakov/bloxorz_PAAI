@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from model.drection import Drection
+
 """Box"""
 class Box:
     def __init__(self, symbol, state, location):
@@ -25,7 +27,7 @@ class Box:
                 self.change_location(newLocation)
             else:
                 # Nam ngang
-                if self.check_verti_or_hori() == 0:
+                if self.is_horizontal():
                     y1 = self.location[0][0]
                     x1 = self.location[0][1]
                     y2 = self.location[1][0]
@@ -35,7 +37,7 @@ class Box:
                     newLocation = [[newY2, x1], [newY1, x2]]
                     self.change_location(newLocation)
                 # Nam Doc
-                elif self.check_verti_or_hori() == 1:
+                elif self.is_vertical():
                     yi = self.location[1][0]
                     xi = self.location[1][1]
                     newYi = int(yi-1)
@@ -61,14 +63,14 @@ class Box:
                 self.change_location(newLocation)
             else:
                 # Nam ngang
-                if self.check_verti_or_hori() == 0:
+                if self.is_horizontal():
                     yi = self.location[1][0]
                     xi = self.location[1][1]
                     newXi = int(xi+1)
                     newLocation = [[yi, newXi]]
                     self.change_location(newLocation)
                 # Nam Doc
-                elif self.check_verti_or_hori() == 1:
+                elif self.is_vertical():
                     y1 = self.location[0][0]
                     x1 = self.location[0][1]
                     y2 = self.location[1][0]
@@ -97,14 +99,14 @@ class Box:
                 self.change_location(newLocation)
             else:
                 # Nam ngang
-                if self.check_verti_or_hori() == 0:
+                if self.is_horizontal():
                     yi = self.location[0][0]
                     xi = self.location[0][1]
                     newXi = int(xi-1)
                     newLocation = [[yi, newXi]]
                     self.change_location(newLocation)
                 # Nam Doc
-                elif self.check_verti_or_hori() == 1:
+                elif self.is_vertical():
                     y1 = self.location[0][0]
                     x1 = self.location[0][1]
                     y2 = self.location[1][0]
@@ -134,7 +136,7 @@ class Box:
                 self.change_location(newLocation)
             else:
                 # Nam ngang
-                if self.check_verti_or_hori() == 0:
+                if self.is_horizontal():
                     y1 = self.location[0][0]
                     x1 = self.location[0][1]
                     y2 = self.location[1][0]
@@ -144,7 +146,7 @@ class Box:
                     newLocation = [[newY1, x1], [newY2, x2]]
                     self.change_location(newLocation)
                 # Nam Doc
-                elif self.check_verti_or_hori() == 1:
+                elif self.is_vertical():
                     yi = self.location[0][0]
                     xi = self.location[0][1]
                     newYi = int(yi+1)
@@ -169,9 +171,10 @@ class Box:
                 y2 = location[1][0]
                 x2 = location[1][1]
                 if y1 == y2:
-                    return 0 # Ngang
+                    return Drection.horizontal
                 if x1 == x2: 
-                    return 1 # Doc
+                    return Drection.vertical
+            else: return Drection.standing
         else:
             if len(self.location) == 2:
                 y1 = self.location[0][0]
@@ -179,9 +182,10 @@ class Box:
                 y2 = self.location[1][0]
                 x2 = self.location[1][1]
                 if y1 == y2:
-                    return 0 # Ngang
+                    return Drection.horizontal
                 if x1 == x2: 
-                    return 1 # Doc
+                    return Drection.vertical
+            else: return Drection.standing
             
     def change_location(self, location):
         self.pre_location = self.location
@@ -192,3 +196,18 @@ class Box:
 
     def off(self):
         self.active = False
+    
+    def is_horizontal(self):
+        return self.check_verti_or_hori() == Drection.horizontal
+    
+    def is_vertical(self):
+        return self.check_verti_or_hori() == Drection.vertical
+    
+    def is_standing(self):
+        return len(self.location) == Drection.standing
+            
+    def is_singleBox(self):
+        return self.state == 1
+    
+    def is_doubleBox(self):
+        return self.state == 2

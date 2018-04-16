@@ -152,34 +152,27 @@ class maps:
     def refreshBox(self):
         self.__cleanOldBox()
         try:
-            if self.__check_live(self.current_box) == False:
+            if self.__check_life(self.current_box) == False:
                 return False
             self.__updateMaps(key=3)
         except:
             return False
         return True
 
-    def check_win(self):
-        if len(self.current_box.location) == 1:
-            if self.end == self.current_box.location[0]:
-                return True
-        return False
-            
-    def __check_live(self, box):
+    def check_goal(self):
+        return self.current_box.is_standing() and self.current_box.is_doubleBox() and self.end == self.current_box.location[0]
+     
+    def __check_life(self, box):
         if len(box.location) == 1:
             y1 = box.location[0][0]
             x1 = box.location[0][1]
-            obj = self.maps[y1][x1]
-            res = obj.check_live(box)
-            return res
+            return self.maps[y1][x1].check_life(box)
         elif len(box.location) == 2:
             for child in box.location:
                 y1 = child[0]
                 x1 = child[1]
-                obj = self.maps[y1][x1]
-                res = obj.check_live(box)
-                if res == False:
-                    return False
+                res = self.maps[y1][x1].check_life(box)
+                if res == False: return False
             return True
 
     def __cleanOldBox(self):
