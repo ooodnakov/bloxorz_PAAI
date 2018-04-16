@@ -266,5 +266,4 @@ class maps:
             print("\n",end='')
         print("------" * self.size[1])
 
-
     

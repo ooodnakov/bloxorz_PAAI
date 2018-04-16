@@ -26,7 +26,7 @@ class Control:
         self.stack = [self.start]
         self.visted = [self.start]
         
-        self.moves = (self.move_right, self.move_down, self.move_up, self.move_left)
+        self.moves = (self.move_up, self.move_down, self.move_right, self.move_left)
 
     def move_up(self):
         self.pre = self.current
@@ -109,7 +109,7 @@ def dfs(state: Control):
         for move in state.moves:
             state.set_box(current_state)
             state.maps.print_current()
-            time.sleep(0.2)
+            time.sleep(0.3)
             os.system("cls")
             if move():
                 state.maps.print_current()
@@ -133,7 +133,7 @@ def bfs(state: Control):
         for move in state.moves:
             state.set_box(current_state)
             # state.maps.print_current()
-            # time.sleep(0.5)
+            # time.sleep(0.3)
             # os.system("cls")
             if move():
                 # state.maps.print_current()
