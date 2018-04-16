@@ -56,7 +56,7 @@ class maps:
             # Load Maps
             self.__loadMap()
             # Update Maps
-            self.__updateMaps("all")
+            self.updateMaps("all")
 
         else: print("Path_to_level not None")
     
@@ -82,9 +82,9 @@ class maps:
                     line.append(newtile)
             self.maps.append(line)
         # Load Start Box to Maps
-        self.maps[int(self.start[0])][int(self.start[1])].set_box(self.current_box)
+        # self.maps[int(self.start[0])][int(self.start[1])].set_box(self.current_box)
 
-    def __updateMaps(self, key=None):
+    def updateMaps(self, key=None):
         # Load swO to Maps
         if len(self.swO) != 0 and key=="all":
             for one in self.swO:
@@ -119,71 +119,63 @@ class maps:
                         self.maps[int(one.location[1][0])][int(one.location[1][1])].type = 0
                     self.maps[int(one.location[1][0])][int(one.location[1][1])].set_obj(one)
         
-        # Loads current box to Maps
-        if key==3 or key=="all":
-            curr_location = self.current_box.location
-            stateBox = len(curr_location)
-            if stateBox == 1: 
-                self.maps[int(curr_location[0][0])][int(curr_location[0][1])].set_box(self.current_box)
-            elif stateBox == 2: 
-                self.maps[int(curr_location[0][0])][int(curr_location[0][1])].set_box(self.current_box)
-                self.maps[int(curr_location[1][0])][int(curr_location[1][1])].set_box(self.current_box)
-
     def updateSWX(self, swXObj):
         for one in self.swX:
             if one.symbol == swXObj.symbol:
                 self.swX[self.swX.index(one)].active = swXObj.active
                 self.__updateBrid(swXObj.bridge)
-                self.__updateMaps()
+                self.updateMaps()
     
     def updateSWQ(self, swQObj):
         for one in self.swQ:
             if one.symbol == swQObj.symbol:
                 self.swQ[self.swQ.index(one)].active = swQObj.active
                 self.__updateBrid(swQObj.bridge)
-                self.__updateMaps()
+                self.updateMaps()
     
     def updateSWO(self, swOObj):
         for one in self.swO:
             if one.symbol == swOObj.symbol:
                 self.swO[self.swO.index(one)] = swOObj
-                self.__updateMaps()
+                self.updateMaps()
     
     def refreshBox(self):
-        self.__cleanOldBox()
-        try:
-            if self.__check_life(self.current_box) == False:
-                return False
-            self.__updateMaps(key=3)
-        except:
+        if not self.__check_isFloor(self.current_box):
+            self.current_box.location = self.current_box.pre_location
             return False
         return True
+    
+    def __is_goal(self):
+        return self.end == self.current_box.location[0]
 
     def check_goal(self):
-        return self.current_box.is_standing() and self.current_box.is_doubleBox() and self.end == self.current_box.location[0]
+        return self.current_box.is_standing() and self.current_box.is_doubleBox() and self.__is_goal()
      
     def __check_life(self, box):
         if len(box.location) == 1:
-            y1 = box.location[0][0]
-            x1 = box.location[0][1]
-            return self.maps[y1][x1].check_life(box)
+            y , x = box.location[0]
+            return self.maps[y][x].check_material_tile(box)
         elif len(box.location) == 2:
             for child in box.location:
-                y1 = child[0]
-                x1 = child[1]
-                res = self.maps[y1][x1].check_life(box)
-                if res == False: return False
+                y, x = child
+                if not self.maps[y][x].check_material_tile(box): 
+                    return False
             return True
+    
+    def __check_isFloor(self, box):
+        width, height = self.size
+        if len(box.location) == 1:
+            y, x = box.location[0]
+            if y < 0 or y >= width or x < 0 or x >= height:
+                return False
+            return self.__check_life(box)
+        elif len(box.location) == 2:
+            for child in box.location:
+                y , x = child
+                if y < 0 or y >= width or x < 0 or x >= height:
+                    return False
+            return self.__check_life(box)
 
-    def __cleanOldBox(self):
-        oldBox = self.current_box.pre_location
-        stateBox = len(oldBox)
-        if stateBox == 1: 
-            self.maps[int(oldBox[0][0])][int(oldBox[0][1])].set_box(None)
-        elif stateBox == 2:
-            self.maps[int(oldBox[0][0])][int(oldBox[0][1])].set_box(None)
-            self.maps[int(oldBox[1][0])][int(oldBox[1][1])].set_box(None)
-        
     def __updateBrid(self, bridObj):
         for one in self.Brid:
             if one.symbol == bridObj.symbol:
@@ -244,19 +236,15 @@ class maps:
             for j in i:
                 if j.type == 0:
                     content = " "
-                    if j.obj != None and j.box != None:
-                        content = j.box.symbol
-                    elif j.obj != None and j.box == None:
+                    if j.obj != None:
                         if j.obj.symbol == "$":
                             content = "$"
                 elif j.type == 1 or j.type == 2:
-                    if j.obj != None and j.box != None:
-                        content = j.box.symbol
-                    elif j.obj != None and j.box == None: 
+                    if j.obj != None:
                         content = j.obj.symbol
-                    elif j.obj == None and j.box != None:
-                        content = j.box.symbol
                     else: content = j.type
+                if j.location in self.current_box.location:
+                    content = "#"
                 print('{0: <2}'.format(content),"|", end='')
                 print('{0: <2}'.format(""), end='')
             print("\n",end='')

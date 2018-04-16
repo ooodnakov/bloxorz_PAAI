@@ -6,10 +6,9 @@ class tile:
     def __init__(self, typ, obj, location):
         self.type = typ
         self.obj = obj
-        self.box = None
         self.location = location
     
-    def check_life(self, box):
+    def check_material_tile(self, box):
         for child in box.location:
             if child == self.location:
                 # Space
@@ -27,8 +26,8 @@ class tile:
     def get_location(self):
         return self.location
     
-    def set_box(self, box):
-        self.box = box
+    # def set_box(self, box):
+    #     self.box = box
     
     def set_obj(self, obj):
         self.obj = obj
