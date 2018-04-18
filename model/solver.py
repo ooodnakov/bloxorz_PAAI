@@ -4,9 +4,6 @@ import os
 import sys
 import time
 
-
-
-
 class Control:
     Play_handle = False
     def __init__(self, maps=None):
@@ -26,13 +23,13 @@ class Control:
         self.stack = [self.start]
         self.visted = [self.start]
         
-        self.moves = (self.move_up, self.move_down, self.move_right, self.move_left)
+        self.moves = (self.move_right, self.move_down, self.move_up, self.move_left)
 
     def move_up(self):
         self.pre = self.current
         self.maps.current_box.move_up()
         if not self.check_box_on_maps():
-            self.set_box(self.pre)
+            self.set_state(self.pre)
             return False
         else:
             if not self.Play_handle:
@@ -44,7 +41,7 @@ class Control:
         self.pre = self.current
         self.maps.current_box.move_down()
         if not self.check_box_on_maps():
-            self.set_box(self.pre)
+            self.set_state(self.pre)
             return False
         else:
             if not self.Play_handle:
@@ -59,7 +56,7 @@ class Control:
         self.pre = self.current
         self.maps.current_box.move_right()
         if not self.check_box_on_maps():
-            self.set_box(self.pre)
+            self.set_state(self.pre)
             return False
         else:
             if not self.Play_handle:
@@ -71,7 +68,7 @@ class Control:
         self.pre = self.current
         self.maps.current_box.move_left()
         if not self.check_box_on_maps():
-            self.set_box(self.pre)
+            self.set_state(self.pre)
             return False
         else:
             if not self.Play_handle:
@@ -82,7 +79,7 @@ class Control:
     def check_box_on_maps(self):
         return self.maps.refreshBox()
     
-    def set_box(self, location):
+    def set_state(self, location):
         self.current = location
         self.maps.current_box.location = location
     
@@ -107,15 +104,15 @@ def dfs(state: Control):
     while state.stack:
         current_state = state.stack.pop()
         for move in state.moves:
-            state.set_box(current_state)
-            state.maps.print_current()
-            time.sleep(0.3)
-            os.system("cls")
+            state.set_state(current_state)
+            # state.maps.print_current()
+            # time.sleep(0.3)
+            # os.system("clear")
             if move():
-                state.maps.print_current()
+                # state.maps.print_current()
                 if state.check_goal():
                     return
-            os.system("cls")
+            # os.system("clear")
 
 def dfs_recursion(state: Control):
     if state.check_goal():
@@ -123,7 +120,7 @@ def dfs_recursion(state: Control):
         return
     current_state = state.stack.pop()
     for move in state.moves:
-        state.set_box(current_state)
+        state.set_state(current_state)
         if move():
             dfs_recursion(state)
 
@@ -131,7 +128,7 @@ def bfs(state: Control):
     while state.stack:
         current_state = state.stack.pop(0)
         for move in state.moves:
-            state.set_box(current_state)
+            state.set_state(current_state)
             # state.maps.print_current()
             # time.sleep(0.3)
             # os.system("cls")
@@ -147,7 +144,7 @@ def dfs_path(state: Control):
         current_state = state.stack.pop()
         path = stack.pop()
         for move in state.moves:
-            state.set_box(current_state)
+            state.set_state(current_state)
             if move():
                 if state.check_goal():
                     result = path + [state.current]
@@ -160,7 +157,7 @@ def bfs_path(state: Control):
         current_state = state.stack.pop(0)
         path = stack.pop(0)
         for move in state.moves:
-            state.set_box(current_state)
+            state.set_state(current_state)
             if move():
                 if state.check_goal():
                     result = path + [state.current]
