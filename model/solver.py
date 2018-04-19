@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import os
 import sys
@@ -99,20 +99,26 @@ class Control:
 
     def print_maps(self):
         self.maps.print_current()
-        
+
+
+def print_stack(stack, algorithm):
+    if algorithm=="dfs":
+        print("STACK: ")
+        for state in stack[::-1]:
+            print("( %s ) " % state)
+    elif algorithm=="bfs":
+        print("QUEUE: ")
+        for state in stack:
+            print("( %s ) " % state)
+
 def dfs(state: Control):
     while state.stack:
         current_state = state.stack.pop()
         for move in state.moves:
             state.set_state(current_state)
-            # state.maps.print_current()
-            # time.sleep(0.3)
-            # os.system("clear")
             if move():
-                # state.maps.print_current()
                 if state.check_goal():
                     return
-            # os.system("clear")
 
 def dfs_recursion(state: Control):
     if state.check_goal():
@@ -129,14 +135,47 @@ def bfs(state: Control):
         current_state = state.stack.pop(0)
         for move in state.moves:
             state.set_state(current_state)
-            # state.maps.print_current()
-            # time.sleep(0.3)
-            # os.system("cls")
             if move():
-                # state.maps.print_current()
                 if state.check_goal():
                     return
-            # os.system("cls")
+
+def dfs_step_by_step(state: Control, timesleep=0.5):
+    while state.stack:
+        current_state = state.stack.pop()
+        print("POP: ( %s )" % current_state)
+        for move in state.moves:
+            state.set_state(current_state)
+            print_stack(state.stack, "dfs")
+            state.maps.print_current()
+            time.sleep(timesleep)
+            os.system("clear")
+            if move():
+                print_stack(state.stack, "dfs")
+                state.maps.print_current()
+                time.sleep(timesleep)
+                if state.check_goal():
+                    print("WINNER!")
+                    return
+            os.system("clear")
+
+def bfs_step_by_step(state: Control, timesleep=0.5):
+    while state.stack:
+        current_state = state.stack.pop(0)
+        print("POP: ( %s )" % current_state)
+        for move in state.moves:
+            state.set_state(current_state)
+            print_stack(state.stack, "bfs")
+            state.maps.print_current()
+            time.sleep(timesleep)
+            os.system("clear")
+            if move():
+                print_stack(state.stack, "bfs")
+                state.maps.print_current()
+                time.sleep(timesleep)
+                if state.check_goal():
+                    print("WINNER!")
+                    return
+            os.system("clear")
 
 def dfs_path(state: Control):
     stack = [[state.current], ]
