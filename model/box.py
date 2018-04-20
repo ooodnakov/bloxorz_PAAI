@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from model.drection import Drection
+from model.direction import Direction
 
 """Box"""
 class Box:
@@ -143,19 +143,19 @@ class Box:
                 y1, x1 = location[0]
                 y2, x2 = location[1]
                 if y1 == y2:
-                    return Drection.horizontal
+                    return Direction.horizontal
                 if x1 == x2: 
-                    return Drection.vertical
-            else: return Drection.standing
+                    return Direction.vertical
+            else: return Direction.standing
         else:
             if len(self.location) == 2:
                 y1, x1 = self.location[0]
                 y2, x2 = self.location[1]
                 if y1 == y2:
-                    return Drection.horizontal
+                    return Direction.horizontal
                 if x1 == x2: 
-                    return Drection.vertical
-            else: return Drection.standing
+                    return Direction.vertical
+            else: return Direction.standing
             
     def change_location(self, location):
         self.pre_location = self.location
@@ -168,13 +168,13 @@ class Box:
         self.active = False
     
     def is_horizontal(self):
-        return self.check_verti_or_hori() == Drection.horizontal
+        return self.check_verti_or_hori() == Direction.horizontal
     
     def is_vertical(self):
-        return self.check_verti_or_hori() == Drection.vertical
+        return self.check_verti_or_hori() == Direction.vertical
     
     def is_standing(self):
-        return len(self.location) == Drection.standing
+        return len(self.location) == Direction.standing
             
     def is_singleBox(self):
         return self.state == 1

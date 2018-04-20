@@ -1,105 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import os
-import sys
 import time
-
-class Control:
-    Play_handle = False
-    def __init__(self, maps=None):
-        if maps is None:
-            print("Maps not None")
-            sys.exit()
-
-        self.start = maps.current_box.location
-        self.current = maps.current_box.location
-        self.pre = maps.current_box.location
-        self.maps = maps
-
-        if not self.check_box_on_maps():
-            print("Start Box Error")
-            sys.exit()
-        
-        self.stack = [self.start]
-        self.visted = [self.start]
-        
-        self.moves = (self.move_right, self.move_down, self.move_up, self.move_left)
-
-    def move_up(self):
-        self.pre = self.current
-        self.maps.current_box.move_up()
-        if not self.check_box_on_maps():
-            self.set_state(self.pre)
-            return False
-        else:
-            if not self.Play_handle:
-                self.__update_current_locaton()
-                return self.add_stack()
-            return True 
-    
-    def move_down(self):
-        self.pre = self.current
-        self.maps.current_box.move_down()
-        if not self.check_box_on_maps():
-            self.set_state(self.pre)
-            return False
-        else:
-            if not self.Play_handle:
-                self.__update_current_locaton()
-                return self.add_stack()
-            return True 
-    
-    def __update_current_locaton(self):
-        self.current = self.maps.current_box.location
-    
-    def move_right(self):
-        self.pre = self.current
-        self.maps.current_box.move_right()
-        if not self.check_box_on_maps():
-            self.set_state(self.pre)
-            return False
-        else:
-            if not self.Play_handle:
-                self.__update_current_locaton()
-                return self.add_stack()
-            return True 
-    
-    def move_left(self):
-        self.pre = self.current
-        self.maps.current_box.move_left()
-        if not self.check_box_on_maps():
-            self.set_state(self.pre)
-            return False
-        else:
-            if not self.Play_handle:
-                self.__update_current_locaton()
-                return self.add_stack()
-            return True 
-
-    def check_box_on_maps(self):
-        return self.maps.refreshBox()
-    
-    def set_state(self, location):
-        self.current = location
-        self.maps.current_box.location = location
-    
-    def get_box(self):
-        return self.current
-    
-    def add_stack(self):
-        state = self.current
-        if state not in self.visted:
-            self.visted.append(state)
-            self.stack.append(state)
-            return True
-        return False
-    
-    def check_goal(self):
-        return self.maps.check_goal()
-
-    def print_maps(self):
-        self.maps.print_current()
-
+from model.control import Control
+from model.map import maps
+from model.control import Control
+from drawing.display import Display
+from drawing.box import Box
+import pygame
 
 def print_stack(stack, algorithm):
     if algorithm=="dfs":
@@ -114,118 +22,164 @@ def print_stack(stack, algorithm):
 def dfs(state: Control):
     while state.stack:
         current_state = state.stack.pop()
+        current_maps = state.stack_maps.pop()
         for move in state.moves:
-            state.set_state(current_state)
+            state.set_state(current_state, current_maps)
             if move():
                 if state.check_goal():
                     return
 
 def dfs_recursion(state: Control):
     if state.check_goal():
-        # state.maps.print_current()
         return
     current_state = state.stack.pop()
+    current_maps = state.stack_maps.pop()
     for move in state.moves:
-        state.set_state(current_state)
+        state.set_state(current_state, current_maps)
         if move():
             dfs_recursion(state)
 
 def bfs(state: Control):
     while state.stack:
         current_state = state.stack.pop(0)
+        current_maps = state.stack_maps.pop(0)
         for move in state.moves:
-            state.set_state(current_state)
+            state.set_state(current_state, current_maps)
             if move():
                 if state.check_goal():
                     return
 
-def dfs_step_by_step(state: Control, timesleep=0.5):
+def dfs_step_by_step(state: Control, timesleep=0.5, display=None):
     while state.stack:
         current_state = state.stack.pop()
+        current_maps = state.stack_maps.pop()
+
         print("POP: ( %s )" % current_state)
+
         for move in state.moves:
-            state.set_state(current_state)
+            state.set_state(current_state, current_maps)
+
             print_stack(state.stack, "dfs")
             state.maps.print_current()
+            state.draw_maps()
+            state.draw_box()
+            display.update()
+
             time.sleep(timesleep)
             os.system("clear")
             if move():
                 print_stack(state.stack, "dfs")
                 state.maps.print_current()
+
                 time.sleep(timesleep)
                 if state.check_goal():
                     print("WINNER!")
-                    return
-            os.system("clear")
+                    return state, display
 
-def bfs_step_by_step(state: Control, timesleep=0.5):
+            os.system("clear")
+            state.draw_maps()
+            state.draw_box()
+            display.update()
+
+def bfs_step_by_step(state: Control, timesleep=0.5, display=None):
     while state.stack:
         current_state = state.stack.pop(0)
+        current_maps = state.stack_maps.pop(0)
+
         print("POP: ( %s )" % current_state)
+
         for move in state.moves:
-            state.set_state(current_state)
+            state.set_state(current_state, current_maps)
+
             print_stack(state.stack, "bfs")
             state.maps.print_current()
+            state.draw_maps()
+            state.draw_box()
+            display.update()
+
             time.sleep(timesleep)
             os.system("clear")
             if move():
+                
                 print_stack(state.stack, "bfs")
                 state.maps.print_current()
                 time.sleep(timesleep)
+
                 if state.check_goal():
                     print("WINNER!")
-                    return
+                    return state, display
+                    
             os.system("clear")
+            state.draw_maps()
+            state.draw_box()
+            display.update()
 
 def dfs_path(state: Control):
     stack = [[state.current], ]
+    stack_maps = [[state.start_maps], ]
     while state.stack:
         current_state = state.stack.pop()
+        current_maps = state.stack_maps.pop()
         path = stack.pop()
+        path_maps = stack_maps.pop()
         for move in state.moves:
-            state.set_state(current_state)
+            state.set_state(current_state, current_maps)
             if move():
                 if state.check_goal():
-                    result = path + [state.current]
-                    return result
+                    result1 = path + [state.current]
+                    result2 = path_maps + [state.curr_maps]
+                    return [(c,t) for c, t in zip(result1, result2)] 
                 stack.append(path + [state.current])
+                stack_maps.append(path_maps + [state.curr_maps])
 
 def bfs_path(state: Control):
     stack = [[state.current], ]
+    stack_maps = [[state.start_maps], ]
     while state.stack:
         current_state = state.stack.pop(0)
+        current_maps = state.stack_maps.pop(0)
         path = stack.pop(0)
+        path_maps = stack_maps.pop(0)
         for move in state.moves:
-            state.set_state(current_state)
+            state.set_state(current_state, current_maps)
             if move():
                 if state.check_goal():
-                    result = path + [state.current]
-                    return result
+                    result1 = path + [state.current]
+                    result2 = path_maps + [state.curr_maps]
+                    return [(c,t) for c, t in zip(result1, result2)] 
                 stack.append(path + [state.current])
+                stack_maps.append(path_maps + [state.curr_maps])
+
     
 def hill_climbing(state: Control):
     pass
 
-def handle(state: Control):
-    state.Play_handle = True
-    res = True
-    while 1:
-        number = input("Nhap Buoc Di:")
-        if number == "5":
-            res = state.move_up()
-        elif number == "2":
-            res = state.move_down()
-        elif number == "1":
-            res = state.move_left()
-        elif number == "3":
-            res = state.move_right()
-        else: continue
-        
-        if res == False:
-            print("GAME OVER!")
-            break
-        os.system('cls')
+def handle(state: Control, display):
+    result = True
+    while True:
+        os.system("clear")
+        for event in pygame.event.get():
+            if state.Play_handle:
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                    result = state.move_up()
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                    result = state.move_down()
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+                    result = state.move_right()
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                    result = state.move_left()
+            else: pass
+                
+            if display.quit(event):
+                return
+        state.draw_maps()
+        state.draw_box()
         state.print_maps()
-        if  state.check_goal():
+        display.update()
+
+        if state.check_goal():
             print("WINNER!")
-            break
+            return
+        if result == False:
+            print("LOSER!")
+            return

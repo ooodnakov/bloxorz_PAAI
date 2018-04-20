@@ -118,11 +118,11 @@ class maps:
                     self.maps[int(one.location[1][0])][int(one.location[1][1])].set_obj(one)
     
     def refreshBox(self):
+        self.__checkSWQ()
+        self.__checkSWX()
         if not self.__check_isFloor(self.current_box):
             self.current_box.location = self.current_box.pre_location
             return False
-        self.__checkSWQ()
-        self.__checkSWX()
         return True
 
     def __checkSWQ(self):
@@ -130,17 +130,20 @@ class maps:
             for one in self.current_box.location:
                 for obj in self.swQ:
                     if obj.location == one:
-                        obj.change_active()
-                        self.__updateSWQ(obj)
+                        if obj.change_active():
+                            self.__updateSWQ(obj)
+                            return True
+        return False
 
     def __checkSWX(self):
         if len(self.swX) != 0:
             for one in self.current_box.location:
                 for obj in self.swX:
                     if obj.location == one and self.current_box.is_doubleBox() and self.current_box.is_standing():
-                        obj.change_active()
-                        self.__updateSWX(obj)
-                    else: return
+                        if obj.change_active():
+                            self.__updateSWX(obj)
+                            return True
+        return False
 
     def __updateSWX(self, swXObj):
         for one in self.swX:

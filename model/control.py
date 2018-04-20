@@ -1,0 +1,171 @@
+import sys
+import numpy as np
+import pygame
+from drawing.box import Box as Cube
+from pygame.locals import *
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from model.map import maps
+from model.box import Box 
+from copy import deepcopy
+class Control:
+    Play_handle = False
+    def __init__(self, maps):
+        if maps is None:
+            print("Maps not None")
+            sys.exit()
+
+        
+        self.start = maps.current_box.location
+        self.current = maps.current_box.location
+        self.pre = maps.current_box.location
+
+        self.maps = maps
+        self.start_maps = deepcopy(maps.maps)
+        self.curr_maps = self.start_maps
+        self.pre_maps = self.start_maps
+        self.size = self.maps.size
+
+        self.stack = [self.start]
+        self.visted = [self.start]
+        self.stack_maps = [self.start_maps]
+        
+        self.moves = (self.move_up, self.move_down, self.move_right, self.move_left)
+
+    def move_up(self):
+        self.pre = self.current
+        self.pre_maps = deepcopy(self.curr_maps)
+        self.maps.current_box.move_up()
+        if not self.check_box_on_maps():
+            self.set_state(self.pre, self.pre_maps)
+            return False
+        else:
+            if not self.Play_handle:
+                self.update_current_location()
+                return self.add_stack()
+            self.update_current_location()
+            return True 
+    
+    def move_down(self):
+        self.pre = self.current
+        self.pre_maps = deepcopy(self.curr_maps)
+        self.maps.current_box.move_down()
+        if not self.check_box_on_maps():
+            self.set_state(self.pre, self.pre_maps)
+            return False
+        else:
+            if not self.Play_handle:
+                self.update_current_location()
+                return self.add_stack()
+            self.update_current_location()
+            return True 
+    
+    def move_right(self):
+        self.pre = self.current
+        self.pre_maps = deepcopy(self.curr_maps)
+        self.maps.current_box.move_right()
+        if not self.check_box_on_maps():
+            self.set_state(self.pre, self.pre_maps)
+            return False
+        else:
+            if not self.Play_handle:
+                self.update_current_location()
+                return self.add_stack()
+            self.update_current_location()
+            return True 
+    
+    def move_left(self):
+        self.pre = self.current
+        self.pre_maps = deepcopy(self.curr_maps)
+        self.maps.current_box.move_left()
+        if not self.check_box_on_maps():
+            self.set_state(self.pre, self.pre_maps)
+            return False
+        else:
+            if not self.Play_handle:
+                self.update_current_location()
+                return self.add_stack()
+            self.update_current_location()
+            return True
+
+    def update_current_location(self):
+        self.current = self.maps.current_box.location
+        self.curr_maps = self.maps.maps
+    
+    def update_box_locaton_for_maps(self, location):
+        self.maps.current_box.location = location 
+
+    def check_box_on_maps(self):
+        return self.maps.refreshBox()
+    
+    def set_state(self, location, maps):
+        self.current = location
+        self.curr_maps = maps
+        self.maps.maps = maps
+        self.maps.current_box.location = location
+    
+    def get_box(self):
+        return self.current
+    
+    def add_stack(self):
+        state = self.current
+        maps = deepcopy(self.curr_maps)
+        if state not in self.visted:
+            self.visted.append(state)
+            self.stack.append(state)
+            self.stack_maps.append(maps)
+            return True
+        return False
+    
+    def check_goal(self):
+        return self.maps.check_goal()
+
+    def print_maps(self):
+        self.maps.print_current()
+    
+    def draw_maps(self):
+        height, width = self.size
+        maps = self.curr_maps
+        for x in range(width):
+            for y in range(height):
+                tile = maps[int(y)][int(x)]
+                if tile.type != 0:
+                    Cube.draw_box(position=(x, y), size=(1, 1, -0.3), face_color=tile.colors)
+                else: 
+                    if tile.obj != None and tile.obj.symbol == "$":
+                        Cube.draw_box(position=(x, y), size=(1, 1, -0.3), face_color=tile.colors)
+
+    def draw_box(self):
+        if len(self.current) == 2:
+            current = self.current
+        else: current = [self.current[0], self.current[0]]
+
+        if self.maps.current_box.is_standing():
+            Cube.draw_box(position=(current[0][1], current[0][0]), size=(1, 1, 2), border_color=(1, 1, 1))
+        elif self.maps.current_box.is_vertical():
+            Cube.draw_box(position=(current[1][1], current[1][0]), size=(1, 2, 1), border_color=(1, 1, 1))
+        elif self.maps.current_box.is_horizontal():
+            Cube.draw_box(position=(current[0][1], current[0][0]), size=(2, 1, 1), border_color=(1, 1, 1))
+    
+    def draw_StartBox(self):
+        if len(self.start) == 2:
+            current = self.start
+        else: current = [self.start[0], self.start[0]]
+        
+        BoxStart = Box("#", len(self.start), self.start)
+
+        if BoxStart.is_standing():
+            Cube.draw_box(position=(current[0][1], current[0][0]), size=(1, 1, 2), border_color=(1, 1, 1))
+        elif BoxStart.is_vertical():
+            Cube.draw_box(position=(current[1][1], current[1][0]), size=(1, 2, 1), border_color=(1, 1, 1))
+        elif BoxStart.is_horizontal():
+            Cube.draw_box(position=(current[0][1], current[0][0]), size=(2, 1, 1), border_color=(1, 1, 1))
+    
+    def draw_StartMaps(self):
+        height, width = self.size
+        maps = self.start_maps
+        for x in range(width):
+            for y in range(height):
+                tile = maps[int(y)][int(x)]
+                if tile.type != 0:
+                    Cube.draw_box(position=(x, y), size=(1, 1, -0.3), face_color=tile.colors)
