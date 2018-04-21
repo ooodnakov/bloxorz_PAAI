@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 """Run"""
 import pygame
-from model.solver import *
+import time
+from model.solver import dfs_path, bfs_path, handle
 from drawing.display import Display
-from copy import deepcopy
 from model.map import maps
+from model.control import Control
 
 class Algorithm:
     DFS = 1
@@ -71,4 +72,4 @@ def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS):
     return
 
 if __name__=="__main__":
-    main(level=Level.lv11, Play_handle=False, algorithm=Algorithm.BFS)
+    main(level=Level.lv15, Play_handle=True, algorithm=Algorithm.DFS)

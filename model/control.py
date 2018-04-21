@@ -1,13 +1,9 @@
 import sys
-import numpy as np
-import pygame
 from drawing.box import Box as Cube
-from pygame.locals import *
-from OpenGL.GL import *
-from OpenGL.GLU import *
-from model.map import maps
 from model.box import Box 
 from copy import deepcopy
+degree = 0
+
 class Control:
     Play_handle = False
     def __init__(self, maps):
@@ -100,8 +96,8 @@ class Control:
     
     def set_state(self, location, maps):
         self.current = location
-        self.curr_maps = maps
-        self.maps.maps = maps
+        self.curr_maps = deepcopy(maps)
+        self.maps.maps = self.curr_maps 
         self.maps.current_box.location = location
     
     def get_box(self):
@@ -136,16 +132,17 @@ class Control:
                         Cube.draw_box(position=(x, y), size=(1, 1, -0.3), face_color=tile.colors)
 
     def draw_box(self):
+        global degree
         if len(self.current) == 2:
             current = self.current
         else: current = [self.current[0], self.current[0]]
 
         if self.maps.current_box.is_standing():
-            Cube.draw_box(position=(current[0][1], current[0][0]), size=(1, 1, 2), border_color=(1, 1, 1))
+            Cube.draw_box(position=(current[0][1], current[0][0]), size=(1, 1, 2), border_color=(0.8, 0.8, 0.8))
         elif self.maps.current_box.is_vertical():
-            Cube.draw_box(position=(current[1][1], current[1][0]), size=(1, 2, 1), border_color=(1, 1, 1))
+            Cube.draw_box(position=(current[1][1], current[1][0]), size=(1, 2, 1), border_color=(0.8, 0.8, 0.8))
         elif self.maps.current_box.is_horizontal():
-            Cube.draw_box(position=(current[0][1], current[0][0]), size=(2, 1, 1), border_color=(1, 1, 1))
+            Cube.draw_box(position=(current[0][1], current[0][0]), size=(2, 1, 1), border_color=(0.8, 0.8, 0.8))
     
     def draw_StartBox(self):
         if len(self.start) == 2:
@@ -155,11 +152,11 @@ class Control:
         BoxStart = Box("#", len(self.start), self.start)
 
         if BoxStart.is_standing():
-            Cube.draw_box(position=(current[0][1], current[0][0]), size=(1, 1, 2), border_color=(1, 1, 1))
+            Cube.draw_box(position=(current[0][1], current[0][0]), size=(1, 1, 2), border_color=(0.8, 0.8, 0.8))
         elif BoxStart.is_vertical():
-            Cube.draw_box(position=(current[1][1], current[1][0]), size=(1, 2, 1), border_color=(1, 1, 1))
+            Cube.draw_box(position=(current[1][1], current[1][0]), size=(1, 2, 1), border_color=(0.8, 0.8, 0.8))
         elif BoxStart.is_horizontal():
-            Cube.draw_box(position=(current[0][1], current[0][0]), size=(2, 1, 1), border_color=(1, 1, 1))
+            Cube.draw_box(position=(current[0][1], current[0][0]), size=(2, 1, 1), border_color=(0.8, 0.8, 0.8))
     
     def draw_StartMaps(self):
         height, width = self.size

@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from model.box import Box
 """Tiles"""
 colors = {
 		'gray'	:(	 0.56862745, 0.56862745, 0.56862745, 1),

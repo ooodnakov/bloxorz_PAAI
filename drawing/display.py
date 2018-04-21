@@ -1,5 +1,3 @@
-import sys
-import numpy as np
 import pygame
 import time
 from pygame.locals import *
