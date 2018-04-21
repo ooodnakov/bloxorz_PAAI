@@ -61,3 +61,6 @@ class tile:
                 self.colors = colors['green']
             elif '$' in str(self.obj.symbol):
                 self.colors = colors['yellow']
+    
+    def set_evalvalue(self, value):
+        self.eval_value = value

@@ -2,11 +2,13 @@ import sys
 from drawing.box import Box as Cube
 from model.box import Box 
 from copy import deepcopy
-degree = 0
+from model.map import maps as Maps
+import math
+import numpy as np
 
 class Control:
     Play_handle = False
-    def __init__(self, maps):
+    def __init__(self, maps: Maps):
         if maps is None:
             print("Maps not None")
             sys.exit()
@@ -25,6 +27,9 @@ class Control:
         self.stack = [self.start]
         self.visted = [self.start]
         self.stack_maps = [self.start_maps]
+        self.eval_maps = None
+        self.curr_evaluate =  0
+        self.end = [maps.end]
         
         self.moves = (self.move_up, self.move_down, self.move_right, self.move_left)
 
@@ -100,8 +105,11 @@ class Control:
         self.maps.maps = self.curr_maps 
         self.maps.current_box.location = location
     
-    def get_box(self):
+    def get_state(self):
         return self.current
+    
+    def get_maps(self):
+        return self.curr_maps
     
     def add_stack(self):
         state = self.current
@@ -115,7 +123,41 @@ class Control:
     
     def check_goal(self):
         return self.maps.check_goal()
+    
+    @staticmethod
+    def Distance(pointA, pointB):
+        X2 = math.pow(pointA[0]-pointB[0], 2)
+        Y2 = math.pow(pointA[1]-pointB[1], 2)
+        return math.sqrt(X2+Y2)
 
+    def eval_func(self):
+        goal = self.maps.end
+        y , x =  self.size
+        eval_maps = np.full((y, x), 0)
+
+        for i in range(y):
+            for j in range(x):
+                delta = self.Distance([i,j], goal)
+                eval_maps[i, j] = delta
+        self.eval_maps = eval_maps
+        return eval_maps
+    
+    def evaluate(self):
+        if len(self.current) == 2:
+            point1, point2 = self.current
+            self.curr_evaluate = (self.eval_maps[point1[0], point1[1]] + self.eval_maps[point2[0], point2[1]])/2
+            return self.curr_evaluate
+        elif len(self.current) == 1:
+            point = self.current[0]
+            self.curr_evaluate = self.eval_maps[point[0], point[1]]
+            return self.curr_evaluate
+    
+    def get_evaluate(self):
+        return self.curr_evaluate
+
+    def set_evaluate(self, value):
+        self.curr_evaluate = value
+        
     def print_maps(self):
         self.maps.print_current()
     
@@ -132,7 +174,6 @@ class Control:
                         Cube.draw_box(position=(x, y), size=(1, 1, -0.3), face_color=tile.colors)
 
     def draw_box(self):
-        global degree
         if len(self.current) == 2:
             current = self.current
         else: current = [self.current[0], self.current[0]]
