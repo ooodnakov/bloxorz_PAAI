@@ -3,6 +3,7 @@
 """Run"""
 import pygame
 import sys
+import os
 import time
 from model.solver import dfs_path, bfs_path, handle, hill_climbing
 from drawing.display import Display
@@ -28,7 +29,7 @@ def deltatime(start_time):
     result = time.time() - start_time
     print("Time: ", result)
 
-def draw_path(solution, display, timesleep=0.5, level=Level.lv0):
+def draw_path_3D(solution, display, timesleep=0.5, level=Level.lv0):
     if solution != None:
         print("Found solution success!")
         print(solution)
@@ -55,6 +56,31 @@ def draw_path(solution, display, timesleep=0.5, level=Level.lv0):
     else:
         print("Unable to find path for maps!")
         print("Dir path: %s", level)
+
+def draw_path_2D(solution, timesleep=0.5, level=Level.lv0):
+    if solution != None:
+        print("Found solution success!")
+        print(solution)
+        choiselv = maps(level)
+
+        level = Control(choiselv)
+        level.print_maps()
+        
+        time.sleep(timesleep)
+
+        for path in solution:
+            os.system("clear")
+            level.current = path
+            level.update_box_locaton_for_maps(path)
+            level.maps.refreshBox()
+            level.update_current_location()
+
+            level.print_maps()
+            time.sleep(timesleep)
+        return
+    else:
+        print("Unable to find path for maps!")
+        print("Dir path: %s", level)
     
 def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS):
     print("Processing...")
@@ -71,17 +97,25 @@ def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS):
         if algorithm == Algorithm.DFS:
             result = dfs_path(state)
             deltatime(Start_Time)
-            draw_path(result, display, level=level)
+            draw_path_2D(result, level=level)
+            # draw_path_3D(result, display, level=level)
         elif algorithm == Algorithm.BFS:
             result = bfs_path(state)
             deltatime(Start_Time)
-            draw_path(result, display, level=level)
+            draw_path_2D(result, level=level)
+            # draw_path_3D(result, display, level=level)
         elif algorithm == Algorithm.HILL:
             result = hill_climbing(state)
             deltatime(Start_Time)
-            draw_path(result, display, level=level)
+            draw_path_2D(result, level=level)
+            # draw_path_3D(result, display, level=level)
     time.sleep(10)
     sys.exit()
 
 if __name__=="__main__":
-    main(level=Level.lv14, Play_handle=False, algorithm=Algorithm.BFS)
+    main(level=Level.lv1, Play_handle=False, algorithm=Algorithm.DFS)
+
+# Chỉnh sửa 
+# Level : thay đổi level game
+# Play_handle : True nếu muốn chơi tay
+# Algorithm : Tên giải thuật tìm kiếm
