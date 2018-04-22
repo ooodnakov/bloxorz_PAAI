@@ -157,7 +157,6 @@ def bfs_path(state: Control):
 def hill_climbing(state: Control):
     count = 0
     state.eval_func()
-    state.evaluate()
     path = [] 
     path_maps = []
     all_accept_state = []
