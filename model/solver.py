@@ -117,40 +117,32 @@ def bfs_step_by_step(state: Control, timesleep=0.5, display=None):
 
 def dfs_path(state: Control):
     stack = [[state.current], ]
-    stack_maps = [[state.start_maps], ]
     while state.stack:
         current_state = state.stack.pop()
         current_maps = state.stack_maps.pop()
         path = stack.pop()
-        path_maps = stack_maps.pop()
         for move in state.moves:
             state.set_state(current_state, current_maps)
             if move():
                 if state.check_goal():
-                    result1 = path + [state.current]
-                    result2 = path_maps + [state.curr_maps]
-                    return result1 #[(c,t) for c, t in zip(result1, result2)] 
+                    result = path + [state.current]
+                    return result 
                 stack.append(path + [state.current])
-                stack_maps.append(path_maps + [state.curr_maps])
     return None
 
 def bfs_path(state: Control):
     stack = [[state.current], ]
-    stack_maps = [[state.start_maps], ]
     while state.stack:
         current_state = state.stack.pop(0)
         current_maps = state.stack_maps.pop(0)
         path = stack.pop(0)
-        path_maps = stack_maps.pop(0)
         for move in state.moves:
             state.set_state(current_state, current_maps)
             if move():
                 if state.check_goal():
-                    result1 = path + [state.current]
-                    result2 = path_maps + [state.curr_maps]
-                    return result1 #[(c,t) for c, t in zip(result1, result2)] 
+                    result = path + [state.current]
+                    return result 
                 stack.append(path + [state.current])
-                stack_maps.append(path_maps + [state.curr_maps])
     return None
 
     
@@ -158,7 +150,6 @@ def hill_climbing(state: Control):
     count = 0
     state.eval_func()
     path = [] 
-    path_maps = []
     all_accept_state = []
     best_state = []
 
@@ -167,7 +158,6 @@ def hill_climbing(state: Control):
         current_maps = state.get_maps()
         current_eval = state.evaluate()
         path.append(current_state)
-        path_maps.append(current_maps)
 
         accept_state = []
 
@@ -186,34 +176,30 @@ def hill_climbing(state: Control):
 
             if next_state == state.end:
                 path.append(next_state)
-                path_maps.append(current_maps)
-                return path #[(c,t) for c, t in zip(path, path_maps)]
+                return path
             
             state.set_state(next_state, current_maps)
-        # Problem Of Hill_climbing
         else: 
-            # Remove Current State from Path
             try:
                 count +=1
                 print("Try again!", count)
                 print(path)
                 while True:
-                    # Get state from All State have Accepted 
                     next_eval, next_state, current_maps = all_accept_state.pop()
                     if next_state in best_state:
                         path.pop()
-                        path_maps.pop()
                         continue
                     else:
                         path.pop()
-                        path_maps.pop() 
                         state.set_state(next_state, current_maps)
                         break
             except:
                 return None
 
 
-def handle(state: Control, display):
+def handle(state: Control, map_size= (0,0)):
+    pygame.init()
+    display = Display(title='Bloxorz Game', map_size=map_size)
     result = True
     while True:
         os.system("clear")

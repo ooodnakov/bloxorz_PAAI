@@ -32,7 +32,9 @@ def deltatime(start_time):
 def flatMap(path):
     return [y for x in path for y in x]
 
-def draw_path_3D(solution, display, timesleep=0.5, level=Level.lv0):
+def draw_path_3D(solution, timesleep=0.5, level=Level.lv0, map_size = (0,0)):
+    pygame.init()
+    display = Display(title='Bloxorz Game', map_size=map_size)
     if solution != None:
         print("Found solution success!")
         print(solution)
@@ -96,38 +98,37 @@ def draw_path_2D(solution, timesleep=0.5, level=Level.lv0):
     
 def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS):
     print("Processing...")
-    pygame.init()
     Maps = maps(level)
-    display = Display(title='Bloxorz Game', map_size=(Maps.size[0], Maps.size[1]))
+    size = Maps.size
     state = Control(Maps)
 
     if Play_handle:
         state.Play_handle = Play_handle
-        handle(state, display)
+        handle(state, map_size=(size[0], size[1]))
     else:
         Start_Time = time.time()
         if algorithm == Algorithm.DFS:
             result = dfs_path(state)
             deltatime(Start_Time)
             # draw_path_2D(result, level=level)
-            draw_path_3D(result, display, level=level)
+            draw_path_3D(result, level=level, map_size=(size[0], size[1]))
         elif algorithm == Algorithm.BFS:
             result = bfs_path(state)
             deltatime(Start_Time)
             # draw_path_2D(result, level=level)
-            draw_path_3D(result, display, level=level)
+            draw_path_3D(result, level=level, map_size=(size[0], size[1]))
         elif algorithm == Algorithm.HILL:
             result = hill_climbing(state)
             deltatime(Start_Time)
             # draw_path_2D(result, level=level)
-            draw_path_3D(result, display, level=level)
+            draw_path_3D(result, level=level, map_size=(size[0], size[1]))
     time.sleep(3)
     sys.exit()
 
 if __name__=="__main__":
-    main(level=Level.lv0, Play_handle=False, algorithm=Algorithm.HILL)
+    main(level=Level.lv15, Play_handle=False, algorithm=Algorithm.HILL)
 
 # Chỉnh sửa 
 # Level : thay đổi level game
-# Play_handle : True nếu muốn chơi tay
+# Play_handle : True nếu muốn chơi tay, False nếu muốn giải bằng giải thuật
 # Algorithm : Tên giải thuật tìm kiếm

@@ -14,7 +14,6 @@ class Control:
             print("Maps not None")
             sys.exit()
 
-        
         self.start = maps.current_box.location
         self.current = maps.current_box.location
         self.pre = maps.current_box.location
