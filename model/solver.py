@@ -161,43 +161,55 @@ def hill_climbing(state: Control):
     path = [] 
     path_maps = []
     all_accept_state = []
+    best_state = []
 
     while True:
         current_state = state.get_state()
         current_maps = state.get_maps()
-        current_eval = state.get_evaluate()
+        current_eval = state.evaluate()
         path.append(current_state)
         path_maps.append(current_maps)
 
-        accept_state = [[],[]]
+        accept_state = []
 
         for move in state.moves:
+            state.set_state(current_state, deepcopy(current_maps))
             if move():
                 delta = state.evaluate()
                 if delta <= current_eval:
                     better_state = state.get_state()
-                    accept_state[0].append((delta, better_state))
-                    accept_state[1].append(deepcopy(current_maps))
-                    all_accept_state.append((better_state, deepcopy(current_maps)))
-            state.set_state(current_state, current_maps)
-
-        if accept_state[0] != []:
-            next_eval, next_state = min(accept_state[0])
-            map_index = accept_state[0].index((next_eval, next_state))
+                    accept_state.append((delta, better_state, deepcopy(current_maps)))
+            
+        if accept_state != []:
+            next_eval, next_state, current_maps = min(accept_state)
+            best_state.append(next_state)
+            all_accept_state.extend(sorted(accept_state))
 
             if next_state == state.end:
                 path.append(next_state)
                 path_maps.append(current_maps)
                 return path #[(c,t) for c, t in zip(path, path_maps)]
             
-            state.set_state(next_state, accept_state[1][map_index])
-        else:
+            state.set_state(next_state, current_maps)
+        # Problem Of Hill_climbing
+        else: 
+            # Remove Current State from Path
             try:
                 count +=1
                 print("Try again!", count)
                 print(path)
-                next_state, current_maps = all_accept_state.pop()
-                state.set_state(next_state, current_maps)
+                while True:
+                    # Get state from All State have Accepted 
+                    next_eval, next_state, current_maps = all_accept_state.pop()
+                    if next_state in best_state:
+                        path.pop()
+                        path_maps.pop()
+                        continue
+                    else:
+                        path.pop()
+                        path_maps.pop() 
+                        state.set_state(next_state, current_maps)
+                        break
             except:
                 return None
 

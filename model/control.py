@@ -3,6 +3,7 @@ from drawing.box import Box as Cube
 from model.box import Box 
 from copy import deepcopy
 from model.map import maps as Maps
+from model.tiles import tile as Tile
 import math
 import numpy as np
 
@@ -35,7 +36,7 @@ class Control:
 
     def move_up(self):
         self.pre = self.current
-        self.pre_maps = deepcopy(self.curr_maps)
+        self.pre_maps = self.curr_maps
         self.maps.current_box.move_up()
         if not self.check_box_on_maps():
             self.set_state(self.pre, self.pre_maps)
@@ -49,7 +50,7 @@ class Control:
     
     def move_down(self):
         self.pre = self.current
-        self.pre_maps = deepcopy(self.curr_maps)
+        self.pre_maps = self.curr_maps
         self.maps.current_box.move_down()
         if not self.check_box_on_maps():
             self.set_state(self.pre, self.pre_maps)
@@ -63,7 +64,7 @@ class Control:
     
     def move_right(self):
         self.pre = self.current
-        self.pre_maps = deepcopy(self.curr_maps)
+        self.pre_maps = self.curr_maps
         self.maps.current_box.move_right()
         if not self.check_box_on_maps():
             self.set_state(self.pre, self.pre_maps)
@@ -77,7 +78,7 @@ class Control:
     
     def move_left(self):
         self.pre = self.current
-        self.pre_maps = deepcopy(self.curr_maps)
+        self.pre_maps = self.curr_maps
         self.maps.current_box.move_left()
         if not self.check_box_on_maps():
             self.set_state(self.pre, self.pre_maps)
@@ -101,7 +102,7 @@ class Control:
     
     def set_state(self, location, maps):
         self.current = location
-        self.curr_maps = deepcopy(maps)
+        self.curr_maps = maps
         self.maps.maps = self.curr_maps 
         self.maps.current_box.location = location
     
@@ -161,15 +162,17 @@ class Control:
     def print_maps(self):
         self.maps.print_current()
     
-    def draw_maps(self):
+    def draw_maps(self, path=None):
         height, width = self.size
         maps = self.curr_maps
         for x in range(width):
             for y in range(height):
                 tile = maps[int(y)][int(x)]
                 if tile.type != 0:
+                    # if [y, x] in self.current or [y, x] in path:
+                    #     Cube.draw_box(position=(x, y), size=(1, 1, -0.3), face_color=Tile.mark)
                     Cube.draw_box(position=(x, y), size=(1, 1, -0.3), face_color=tile.colors)
-                else: 
+                else:
                     if tile.obj != None and tile.obj.symbol == "$":
                         Cube.draw_box(position=(x, y), size=(1, 1, -0.3), face_color=tile.colors)
 

@@ -9,10 +9,13 @@ colors = {
         'blue'  :(   0.07450980,  0.6627450, 0.89803921, 1),  #SWX
         'pink'  :(   0.49803921, 0.07450980, 0.19607843, 1),  #SWQ
         'red'   :(   0.93333333, 0.07843137, 0.11372549, 1),   #SWO
-        'yellow' :   ( 1.0, 0.792156862745098, 0.0941176470588235, 0.3)
+        'yellow' :   ( 1.0, 0.792156862745098, 0.0941176470588235, 0.3),
+        'mark' : (0.9058823529411765, 1.0, 0.4431372549019608, 0.5)
 	}
 
 class tile:
+    
+    mark = colors['mark']
     
     def __init__(self, typ, obj, location):
         self.type = typ
@@ -24,8 +27,7 @@ class tile:
             self.colors = colors['gray']
         elif self.type == 2:
             self.colors = colors['orange']
-        
-                    
+             
     def check_material_tile(self, box):
         for child in box.location:
             if child == self.location:
@@ -61,6 +63,3 @@ class tile:
                 self.colors = colors['green']
             elif '$' in str(self.obj.symbol):
                 self.colors = colors['yellow']
-    
-    def set_evalvalue(self, value):
-        self.eval_value = value
