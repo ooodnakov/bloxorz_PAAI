@@ -33,8 +33,10 @@ class swQ:
     
     def get_location(self):
         return self.location
+    
+    def get_bridge(self):
+        return self.bridge
 
-            
 class swX:
     """Switch X"""
     def __init__(self, symbol, typ, active, location, bridge=None):
@@ -63,6 +65,9 @@ class swX:
 
     def get_location(self):
         return self.location
+    
+    def get_bridge(self):
+        return self.bridge
 
 
 class swO:

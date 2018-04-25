@@ -26,6 +26,7 @@ class maps:
         self.swX = list()
         self.swO = list()
         self.Brid = list()
+        self.pre = None
         if path_to_level != None:
             self.loadLevel(path_to_level)
 
@@ -52,7 +53,7 @@ class maps:
             # Load swQ
             self.__loadSWQ()
             # Load swO
-            self.__loadSWO()
+            # self.__loadSWO()
             # Load Maps
             self.__loadMap()
             # Update Maps
@@ -82,88 +83,79 @@ class maps:
                     line.append(newtile)
             self.maps.append(line)
 
-    def updateMaps(self, key=None):
+    def updateMaps(self):
         # Load swO to Maps
-        if len(self.swO) != 0 and (key == None or key == 1):
+        if len(self.swO) != 0:
             for one in self.swO:
                 self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
         # Load swQ to Maps
-        if len(self.swQ) != 0 and (key == None or key == 2):
+        if len(self.swQ) != 0:
             for one in self.swQ:
                 self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
         # Load swX to Maps
-        if len(self.swX) != 0 and (key == None or key == 3):
+        if len(self.swX) != 0:
             for one in self.swX:
                 self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
 
         if len(self.Brid) != 0:
             for one in self.Brid:
                 if one.type == 1: # One tile
-                    if one.active is True:
+                    if one.active == True:
                         self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 1
                     else: 
                         self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 0
                     self.maps[int(one.location[0][0])][int(one.location[0][1])].set_obj(one)
                 elif one.type == 2: # Two tile
-                    if one.active is True:
+                    if one.active == True:
                         self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 1
                     else: 
                         self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 0
                     self.maps[int(one.location[0][0])][int(one.location[0][1])].set_obj(one)
  
-                    if one.active is True:
+                    if one.active == True:
                         self.maps[int(one.location[1][0])][int(one.location[1][1])].type = 1
                     else: 
                         self.maps[int(one.location[1][0])][int(one.location[1][1])].type = 0
                     self.maps[int(one.location[1][0])][int(one.location[1][1])].set_obj(one)
     
     def refreshBox(self):
-        self.__checkSWQ()
-        self.__checkSWX()
         if not self.__check_isFloor(self.current_box):
             self.current_box.location = self.current_box.pre_location
             return False
         return True
 
-    def __checkSWQ(self):
-        if len(self.swQ) != 0:
-            for one in self.current_box.location:
-                for obj in self.swQ:
-                    if obj.location == one:
-                        if obj.change_active():
-                            self.__updateSWQ(obj)
-                            return True
-        return False
-
-    def __checkSWX(self):
-        if len(self.swX) != 0:
-            for one in self.current_box.location:
-                for obj in self.swX:
-                    if obj.location == one and self.current_box.is_doubleBox() and self.current_box.is_standing():
-                        if obj.change_active():
-                            self.__updateSWX(obj)
-                            return True
-        return False
+    def checkSWQ(self):
+        for one in self.current_box.location:
+            y, x = one
+            if type(self.maps[y][x].obj) is swQ:
+                if self.maps[y][x].obj.change_active():
+                    self.__updateSWQ(self.maps[y][x].obj)
+                
+    def checkSWX(self):
+        for one in self.current_box.location:
+            y, x = one
+            if type(self.maps[y][x].obj) is swX:
+                if self.current_box.is_doubleBox() and self.current_box.is_standing():
+                    if self.maps[y][x].obj.change_active():
+                        self.__updateSWX(self.maps[y][x].obj)
 
     def __updateSWX(self, swXObj):
         for one in self.swX:
             if one.symbol == swXObj.symbol:
                 self.swX[self.swX.index(one)].active = swXObj.active
                 self.__updateBrid(swXObj.bridge)
-                self.updateMaps(3)
     
     def __updateSWQ(self, swQObj):
         for one in self.swQ:
             if one.symbol == swQObj.symbol:
                 self.swQ[self.swQ.index(one)].active = swQObj.active
                 self.__updateBrid(swQObj.bridge)
-                self.updateMaps(2)
     
     def __updateSWO(self, swOObj):
         for one in self.swO:
             if one.symbol == swOObj.symbol:
                 self.swO[self.swO.index(one)] = swOObj
-                self.updateMaps(1)
+                self.updateMaps()
     
     def __is_goal(self):
         return self.end == self.current_box.location[0]
@@ -172,6 +164,8 @@ class maps:
         return self.current_box.is_standing() and self.current_box.is_doubleBox() and self.__is_goal()
      
     def __check_life(self, box):
+        self.checkSWQ()
+        self.checkSWX()
         if len(box.location) == 1:
             y , x = box.location[0]
             return self.maps[y][x].check_material_tile(box)
@@ -197,9 +191,19 @@ class maps:
             return self.__check_life(box)
 
     def __updateBrid(self, bridObj):
-        for one in self.Brid:
-            if one.symbol == bridObj.symbol:
-                self.Brid[self.Brid.index(one)] = bridObj
+        index = bridObj.location
+        if bridObj.type == 1:
+            if bridObj.active:
+                self.maps[index[0][0]][index[0][1]] = tile(1, bridObj, index[0])
+            else:
+                self.maps[index[0][0]][index[0][1]] = tile(0, bridObj, index[0])
+        elif bridObj.type == 2:
+            if bridObj.active:
+                self.maps[index[0][0]][index[0][1]] = tile(1, bridObj, index[0])
+                self.maps[index[1][0]][index[1][1]] = tile(1, bridObj, index[1])
+            else:
+                self.maps[index[0][0]][index[0][1]] = tile(0, bridObj, index[0])
+                self.maps[index[1][0]][index[1][1]] = tile(0, bridObj, index[1])
 
     def __loadSWX(self):
         swXObj = self.jsonObj["swX"]

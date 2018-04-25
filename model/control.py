@@ -13,20 +13,21 @@ class Control:
         if maps is None:
             print("Maps not None")
             sys.exit()
-
+        
+        # BOX
         self.start = maps.current_box.location
         self.current = maps.current_box.location
         self.pre = maps.current_box.location
-
+        
+        # MAP
         self.maps = maps
-        self.start_maps = deepcopy(maps.maps)
+        self.start_maps = maps.maps
         self.curr_maps = self.start_maps
         self.pre_maps = self.start_maps
         self.size = self.maps.size
 
-        self.stack = [self.start]
-        self.visted = [self.start]
-        self.stack_maps = [self.start_maps]
+        self.stack = [(self.start, self.start_maps)] 
+        self.visted = [(self.start, self.start_maps)]
         self.eval_maps = None
         self.curr_evaluate =  0
         self.end = [maps.end]
@@ -34,90 +35,85 @@ class Control:
         self.moves = (self.move_up, self.move_down, self.move_right, self.move_left)
 
     def move_up(self):
-        self.pre = self.current
-        self.pre_maps = self.curr_maps
+        # self.pre = self.current
+        # self.pre_maps = self.curr_maps[:]
         self.maps.current_box.move_up()
         if not self.check_box_on_maps():
             self.set_state(self.pre, self.pre_maps)
             return False
         else:
             if not self.Play_handle:
-                self.update_current_location()
                 return self.add_stack()
-            self.update_current_location()
+            self.update_current_location() 
             return True 
     
     def move_down(self):
-        self.pre = self.current
-        self.pre_maps = self.curr_maps
+        # self.pre = self.current
+        # self.pre_maps = self.curr_maps[:]
         self.maps.current_box.move_down()
         if not self.check_box_on_maps():
             self.set_state(self.pre, self.pre_maps)
             return False
         else:
             if not self.Play_handle:
-                self.update_current_location()
-                return self.add_stack()
-            self.update_current_location()
+                return self.add_stack() 
+            self.update_current_location() 
             return True 
     
     def move_right(self):
-        self.pre = self.current
-        self.pre_maps = self.curr_maps
+        # self.pre = self.current
+        # self.pre_maps = self.curr_maps[:]
         self.maps.current_box.move_right()
         if not self.check_box_on_maps():
             self.set_state(self.pre, self.pre_maps)
             return False
         else:
             if not self.Play_handle:
-                self.update_current_location()
                 return self.add_stack()
-            self.update_current_location()
+            self.update_current_location()   
             return True 
     
     def move_left(self):
-        self.pre = self.current
-        self.pre_maps = self.curr_maps
+        # self.pre = self.current
+        # self.pre_maps = self.curr_maps[:]
         self.maps.current_box.move_left()
         if not self.check_box_on_maps():
-            self.set_state(self.pre, self.pre_maps)
             return False
         else:
             if not self.Play_handle:
-                self.update_current_location()
-                return self.add_stack()
-            self.update_current_location()
+                return self.add_stack() 
+            self.update_current_location() 
             return True
 
     def update_current_location(self):
         self.current = self.maps.current_box.location
-        self.curr_maps = self.maps.maps
-    
+        self.curr_maps = self.maps.maps[:]
+        
     def update_box_locaton_for_maps(self, location):
         self.maps.current_box.location = location 
 
     def check_box_on_maps(self):
         return self.maps.refreshBox()
     
-    def set_state(self, location, maps):
-        self.current = location
-        self.curr_maps = maps
-        self.maps.maps = self.curr_maps 
-        self.maps.current_box.location = location
+    def set_state(self, state, maps):
+        self.current = state
+        self.curr_maps = maps[:]
+        self.maps.maps = maps[:]
+        self.maps.current_box.location = state
     
     def get_state(self):
         return self.current
     
     def get_maps(self):
-        return self.curr_maps
+        return self.curr_maps[:]
     
     def add_stack(self):
+        self.update_current_location()
         state = self.current
-        maps = deepcopy(self.curr_maps)
-        if state not in self.visted:
-            self.visted.append(state)
-            self.stack.append(state)
-            self.stack_maps.append(maps)
+        maps = self.curr_maps
+        if (state, maps) not in self.visted:
+            self.visted.append((state, maps))
+            self.stack.append((state, maps))
             return True
         return False
     

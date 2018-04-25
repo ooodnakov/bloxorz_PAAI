@@ -24,7 +24,7 @@ class Display:
 
         glClearColor(0.1, 0.1, 0.1, 0)
 
-        gluPerspective(70, (size[0] / size[1]), 0.1, 80.0)
+        gluPerspective(60, (size[0] / size[1]), 0.1, 80.0)
         gluLookAt(-3, -7, 5, 0, 0, 0, 0, 0, 1)
 
         glTranslatef(-self.width / 2, self.height / 2, 0)

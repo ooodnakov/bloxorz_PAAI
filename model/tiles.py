@@ -16,6 +16,9 @@ colors = {
 class tile:
     
     mark = colors['mark']
+    ROCK = 1
+    SPACE = 0
+    ORANGE = 2
     
     def __init__(self, typ, obj, location):
         self.type = typ
@@ -27,25 +30,38 @@ class tile:
             self.colors = colors['gray']
         elif self.type == 2:
             self.colors = colors['orange']
+        
+        if self.obj != None:
+            if 'x' in str(self.obj.symbol):
+                self.colors = colors['blue']
+            elif 'q' in str(self.obj.symbol):
+                self.colors = colors['pink']
+            elif 'o' in str(self.obj.symbol):
+                self.colors = colors['red']
+            elif 'c' in str(self.obj.symbol):
+                self.colors = colors['green']
+            elif '$' in str(self.obj.symbol):
+                self.colors = colors['yellow']
              
     def check_material_tile(self, box):
         for child in box.location:
             if child == self.location:
                 # Space
-                if self.type == 0:
+                if self.type == tile.SPACE:
                     if self.obj != None:
                         if self.obj.symbol == "$":
                             return True
                         else: return False
                     else: return False
                 # Orange
-                elif self.type == 2:
+                elif self.type == tile.ORANGE:
                     if not box.is_standing():
                         return True
                     else: return False
                 # Rock
-                elif self.type == 1: 
+                elif self.type == tile.ROCK: 
                     return True
+        return False
 
     def get_location(self):
         return self.location

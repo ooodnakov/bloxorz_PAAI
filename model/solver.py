@@ -14,11 +14,11 @@ def print_stack(stack, algorithm):
     if algorithm=="dfs":
         print("STACK: ")
         for state in stack[::-1]:
-            print("( %s ) " % state)
+            print("( %s ) " % state[0])
     elif algorithm=="bfs":
         print("QUEUE: ")
         for state in stack:
-            print("( %s ) " % state)
+            print("( %s ) " % state[0])
 
 def dfs(state: Control):
     while state.stack:
@@ -50,10 +50,13 @@ def bfs(state: Control):
                 if state.check_goal():
                     return
 
-def dfs_step_by_step(state: Control, timesleep=0.5, display=None):
+def dfs_step_by_step(state: Control, timesleep=0.5):
+    pygame.init()
+    display = Display(title='Bloxorz Game', map_size=(state.size[0], state.size[1]))
+
     while state.stack:
-        current_state = state.stack.pop()
-        current_maps = state.stack_maps.pop()
+        current_state, current_maps = state.stack.pop()
+        
 
         print("POP: ( %s )" % current_state)
 
@@ -82,10 +85,12 @@ def dfs_step_by_step(state: Control, timesleep=0.5, display=None):
             state.draw_box()
             display.update()
 
-def bfs_step_by_step(state: Control, timesleep=0.5, display=None):
+def bfs_step_by_step(state: Control, timesleep=0.5):
+    pygame.init()
+    display = Display(title='Bloxorz Game', map_size=(state.size[0], state.size[1]))
+
     while state.stack:
-        current_state = state.stack.pop(0)
-        current_maps = state.stack_maps.pop(0)
+        current_state, current_maps = state.stack.pop(0)
 
         print("POP: ( %s )" % current_state)
 
@@ -116,13 +121,12 @@ def bfs_step_by_step(state: Control, timesleep=0.5, display=None):
             display.update()
 
 def dfs_path(state: Control):
-    stack = [[state.current], ]
+    stack = [[state.start], ]
     while state.stack:
-        current_state = state.stack.pop()
-        current_maps = state.stack_maps.pop()
+        current_state, current_maps = state.stack.pop()
         path = stack.pop()
         for move in state.moves:
-            state.set_state(current_state, current_maps)
+            state.set_state(current_state,  current_maps)
             if move():
                 if state.check_goal():
                     result = path + [state.current]
@@ -131,10 +135,9 @@ def dfs_path(state: Control):
     return None
 
 def bfs_path(state: Control):
-    stack = [[state.current], ]
+    stack = [[state.start], ]
     while state.stack:
-        current_state = state.stack.pop(0)
-        current_maps = state.stack_maps.pop(0)
+        current_state, current_maps = state.stack.pop(0)
         path = stack.pop(0)
         for move in state.moves:
             state.set_state(current_state, current_maps)
@@ -162,12 +165,12 @@ def hill_climbing(state: Control):
         accept_state = []
 
         for move in state.moves:
-            state.set_state(current_state, deepcopy(current_maps))
+            state.set_state(current_state, current_maps)
             if move():
                 delta = state.evaluate()
                 if delta <= current_eval:
                     better_state = state.get_state()
-                    accept_state.append((delta, better_state, deepcopy(current_maps)))
+                    accept_state.append((delta, better_state, current_maps))
             
         if accept_state != []:
             next_eval, next_state, current_maps = min(accept_state)

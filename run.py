@@ -5,7 +5,7 @@ import pygame
 import sys
 import os
 import time
-from model.solver import dfs_path, bfs_path, handle, hill_climbing
+from model.solver import dfs_path, bfs_path, handle, hill_climbing, dfs_step_by_step
 from drawing.display import Display
 from model.map import maps
 from model.control import Control
@@ -18,6 +18,8 @@ class Algorithm:
 class Level:
     lv0  = "./level/0.json"
     lv1  = "./level/1.json"
+    lv2 = "./level/2.json"
+    lv3 = "./level/3.json"
     lv10 = "./level/10.json"
     lv11 = "./level/11.json"
     lv12 = "./level/12.json"
@@ -101,7 +103,7 @@ def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS):
     Maps = maps(level)
     size = Maps.size
     state = Control(Maps)
-
+   
     if Play_handle:
         state.Play_handle = Play_handle
         handle(state, map_size=(size[0], size[1]))
@@ -126,7 +128,10 @@ def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS):
     sys.exit()
 
 if __name__=="__main__":
-    main(level=Level.lv15, Play_handle=False, algorithm=Algorithm.HILL)
+    main(level=Level.lv10, Play_handle=False, algorithm=Algorithm.BFS)
+# Hill 15s 10s 2s
+# DFS 10s 2s
+# BFS 2s 10s
 
 # Chỉnh sửa 
 # Level : thay đổi level game
