@@ -3,6 +3,7 @@
 """Run"""
 import pygame
 import sys
+import argparse
 import os
 import time
 from model.solver import dfs_path, bfs_path, handle, hill_climbing, dfs_step_by_step
@@ -100,7 +101,7 @@ def draw_path_2D(solution, timesleep=0.5, level=Level.lv0):
         print("Dir path: %s" % level)
         return
     
-def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS):
+def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
     print("Processing...")
     Maps = maps(level)
     size = Maps.size
@@ -114,28 +115,50 @@ def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS):
         if algorithm == Algorithm.DFS:
             result = dfs_path(state)
             deltatime(Start_Time)
-            draw_path_2D(result, level=level)
-            # draw_path_3D(result, level=level, map_size=(size[0], size[1]))
+            if view == '2':   
+                draw_path_2D(result, level=level)
+            elif view == '3':
+                draw_path_3D(result, level=level, map_size=(size[0], size[1]))
         elif algorithm == Algorithm.BFS:
             result = bfs_path(state)
             deltatime(Start_Time)
-            draw_path_2D(result, level=level)
-            #draw_path_3D(result, level=level, map_size=(size[0], size[1]))
+            if view == '2':   
+                draw_path_2D(result, level=level)
+            elif view == '3':
+                draw_path_3D(result, level=level, map_size=(size[0], size[1]))
         elif algorithm == Algorithm.HILL:
             result = hill_climbing(state)
             deltatime(Start_Time)
-            draw_path_2D(result, level=level)
-            #draw_path_3D(result, level=level, map_size=(size[0], size[1]))
+            if view == '2':   
+                draw_path_2D(result, level=level)
+            elif view == '3':
+                draw_path_3D(result, level=level, map_size=(size[0], size[1]))
     time.sleep(1)
     sys.exit()
 
 if __name__=="__main__":
-    main(level=Level.lv_test, Play_handle=False, algorithm=Algorithm.HILL)
+    if len(sys.argv) > 2:
+        level = sys.argv[1]
+        option = sys.argv[2]
+        if option != "handle":
+            view = sys.argv[3]
+        if option == "handle": 
+            main(level=level, Play_handle=True, algorithm=Algorithm.HILL)
+        elif option == "dfs":
+            main(level=level, Play_handle=False, algorithm=Algorithm.DFS, view=view)
+        elif option == "bfs":
+            main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view=view)
+        elif option == "hill":
+            main(level=level, Play_handle=False, algorithm=Algorithm.HILL, view=view)
+        else: 
+            print("Sai cú pháp: python3 run.py \\path_to_level option view")
+            print("View: 2 or 3")
+            print("Option: dfs or bfs or hill or handle")
+    else:
+        # Chỉnh sửa tại vị trị này
+        main(level=Level.lv1, Play_handle=False, algorithm=Algorithm.DFS)
+        
+        
 # Hill 1.1 1.2 1.3 2 3 4 4.2 5 6 6.1 8 8.1
 # DFS 1.1 1.3 4.1 4.2 6
 # BFS 1.1 1.3 4.1 4.2 6
-
-# Chỉnh sửa 
-# Level : thay đổi level game
-# Play_handle : True nếu muốn chơi tay, False nếu muốn giải bằng giải thuật
-# Algorithm : Tên giải thuật tìm kiếm
