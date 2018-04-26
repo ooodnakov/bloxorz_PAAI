@@ -27,6 +27,7 @@ class Level:
     lv13 = "./level/13.json"
     lv14 = "./level/14.json"
     lv15 = "./level/15.json"
+    lv_test = "./level_/2.json"
     
 def deltatime(start_time):
     result = time.time() - start_time
@@ -113,26 +114,26 @@ def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS):
         if algorithm == Algorithm.DFS:
             result = dfs_path(state)
             deltatime(Start_Time)
-            # draw_path_2D(result, level=level)
-            draw_path_3D(result, level=level, map_size=(size[0], size[1]))
+            draw_path_2D(result, level=level)
+            # draw_path_3D(result, level=level, map_size=(size[0], size[1]))
         elif algorithm == Algorithm.BFS:
             result = bfs_path(state)
             deltatime(Start_Time)
-            # draw_path_2D(result, level=level)
-            draw_path_3D(result, level=level, map_size=(size[0], size[1]))
+            draw_path_2D(result, level=level)
+            #draw_path_3D(result, level=level, map_size=(size[0], size[1]))
         elif algorithm == Algorithm.HILL:
             result = hill_climbing(state)
             deltatime(Start_Time)
-            # draw_path_2D(result, level=level)
-            draw_path_3D(result, level=level, map_size=(size[0], size[1]))
+            draw_path_2D(result, level=level)
+            #draw_path_3D(result, level=level, map_size=(size[0], size[1]))
     time.sleep(1)
     sys.exit()
 
 if __name__=="__main__":
-    main(level=Level.lv7, Play_handle=False, algorithm=Algorithm.DFS)
-# Hill 2s
-# DFS 2s
-# BFS 2s
+    main(level=Level.lv_test, Play_handle=False, algorithm=Algorithm.HILL)
+# Hill 1.1 1.2 1.3 2 3 4 4.2 5 6 6.1 8 8.1
+# DFS 1.1 1.3 4.1 4.2 6
+# BFS 1.1 1.3 4.1 4.2 6
 
 # Chỉnh sửa 
 # Level : thay đổi level game

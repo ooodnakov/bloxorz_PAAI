@@ -103,10 +103,10 @@ class Control:
         self.maps.current_box.location = self.current
         
     def get_state(self):
-        return self.current
+        return deepcopy(self.current)
     
     def get_maps(self):
-        return self.curr_maps
+        return deepcopy(self.curr_maps)
     
     def add_stack(self):
         state = self.current
@@ -142,11 +142,11 @@ class Control:
     def evaluate(self):
         if len(self.current) == 2:
             point1, point2 = self.current
-            self.curr_evaluate = (self.eval_maps[point1[0], point1[1]] + self.eval_maps[point2[0], point2[1]])/2
+            self.curr_evaluate = (self.eval_maps[point1[0], point1[1]] + self.eval_maps[point2[0], point2[1]])
             return self.curr_evaluate
         elif len(self.current) == 1:
             point = self.current[0]
-            self.curr_evaluate = self.eval_maps[point[0], point[1]]
+            self.curr_evaluate = self.eval_maps[point[0], point[1]]*2
             return self.curr_evaluate
     
     def get_evaluate(self):
