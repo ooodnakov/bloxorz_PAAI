@@ -20,6 +20,7 @@ class Level:
     lv1  = "./level/1.json"
     lv2 = "./level/2.json"
     lv3 = "./level/3.json"
+    lv7 = "./level/7.json"
     lv10 = "./level/10.json"
     lv11 = "./level/11.json"
     lv12 = "./level/12.json"
@@ -124,14 +125,14 @@ def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS):
             deltatime(Start_Time)
             # draw_path_2D(result, level=level)
             draw_path_3D(result, level=level, map_size=(size[0], size[1]))
-    time.sleep(3)
+    time.sleep(1)
     sys.exit()
 
 if __name__=="__main__":
-    main(level=Level.lv10, Play_handle=False, algorithm=Algorithm.BFS)
-# Hill 15s 10s 2s
-# DFS 10s 2s
-# BFS 2s 10s
+    main(level=Level.lv7, Play_handle=False, algorithm=Algorithm.DFS)
+# Hill 2s
+# DFS 2s
+# BFS 2s
 
 # Chỉnh sửa 
 # Level : thay đổi level game

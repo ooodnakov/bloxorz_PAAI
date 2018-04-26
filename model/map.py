@@ -26,7 +26,6 @@ class maps:
         self.swX = list()
         self.swO = list()
         self.Brid = list()
-        self.pre = None
         if path_to_level != None:
             self.loadLevel(path_to_level)
 

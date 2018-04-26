@@ -4,9 +4,9 @@ import os
 import time
 from model.control import Control
 from model.map import maps
-from model.control import Control
 from drawing.display import Display
 from drawing.box import Box
+from model.box import Box as cube
 import pygame
 from copy import deepcopy
 
@@ -126,7 +126,7 @@ def dfs_path(state: Control):
         current_state, current_maps = state.stack.pop()
         path = stack.pop()
         for move in state.moves:
-            state.set_state(current_state,  current_maps)
+            state.set_state(current_state, current_maps)
             if move():
                 if state.check_goal():
                     result = path + [state.current]
@@ -170,10 +170,11 @@ def hill_climbing(state: Control):
                 delta = state.evaluate()
                 if delta <= current_eval:
                     better_state = state.get_state()
-                    accept_state.append((delta, better_state, current_maps))
+                    get_maps = state.get_maps()
+                    accept_state.append((delta, better_state, get_maps))
             
         if accept_state != []:
-            next_eval, next_state, current_maps = min(accept_state)
+            next_eval, next_state, next_maps = min(accept_state)
             best_state.append(next_state)
             all_accept_state.extend(sorted(accept_state))
 
@@ -181,26 +182,27 @@ def hill_climbing(state: Control):
                 path.append(next_state)
                 return path
             
-            state.set_state(next_state, current_maps)
+            state.set_state(next_state, next_maps)
         else: 
             try:
                 count +=1
                 print("Try again!", count)
                 print(path)
                 while True:
-                    next_eval, next_state, current_maps = all_accept_state.pop()
+                    next_eval, next_state, next_maps = all_accept_state.pop()
                     if next_state in best_state:
                         path.pop()
                         continue
                     else:
                         path.pop()
-                        state.set_state(next_state, current_maps)
+                        state.set_state(next_state, next_maps)
                         break
             except:
                 return None
 
 
 def handle(state: Control, map_size= (0,0)):
+    state.Play_handle = True
     pygame.init()
     display = Display(title='Bloxorz Game', map_size=map_size)
     result = True
