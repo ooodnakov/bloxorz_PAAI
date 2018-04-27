@@ -67,7 +67,7 @@ def draw_path_3D(solution, timesleep=0.5, level=Level.lv0, map_size = (0,0)):
         return
     else:
         print("Unable to find path for maps!")
-        print("Dir path: %s" % level)
+        print("Dir Level: %s" % level)
         return
 
 def draw_path_2D(solution, timesleep=0.5, level=Level.lv0):
@@ -98,7 +98,7 @@ def draw_path_2D(solution, timesleep=0.5, level=Level.lv0):
         return
     else:
         print("Unable to find path for maps!")
-        print("Dir path: %s" % level)
+        print("Dir Level: %s" % level)
         return
     
 def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
@@ -168,7 +168,6 @@ if __name__=="__main__":
     else:
         # Edit here
         main(level=Level.lv_test, Play_handle=False, algorithm=Algorithm.DFS, view='3')
-        
         
 # Hill 1.1 1.2 1.3 2 3 4 4.2 5 6 6.1 8 8.1
 # DFS 1.1 1.3 4.1 4.2 6

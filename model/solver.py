@@ -132,6 +132,7 @@ def dfs_path(state: Control):
                     result = path + [state.current]
                     return result 
                 stack.append(path + [state.current])
+                
     return None
 
 def bfs_path(state: Control):
@@ -144,8 +145,9 @@ def bfs_path(state: Control):
             if move():
                 if state.check_goal():
                     result = path + [state.current]
-                    return result 
+                    return result
                 stack.append(path + [state.current])
+                
     return None
 
     
@@ -171,7 +173,9 @@ def hill_climbing(state: Control):
                     better_state = state.get_state()
                     get_maps = state.get_maps()
                     accept_state.append((delta, better_state, get_maps))
+                
             state.set_state(current_state, current_maps)
+                
             
         if accept_state != []:
             next_eval, next_state, next_maps = min(accept_state)
@@ -206,8 +210,9 @@ def handle(state: Control, map_size= (0,0)):
     pygame.init()
     display = Display(title='Bloxorz Game', map_size=map_size)
     result = True
+    print("Press Space Key to Exit!")
     while True:
-        os.system("clear")
+        # os.system("clear")
         for event in pygame.event.get():
             if state.Play_handle:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
@@ -218,13 +223,12 @@ def handle(state: Control, map_size= (0,0)):
                     result = state.move_right()
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
                     result = state.move_left()
-            else: pass
                 
             if display.quit(event):
                 return
         state.draw_maps()
         state.draw_box()
-        state.print_maps()
+        # state.print_maps()
         display.update()
 
         if state.check_goal():

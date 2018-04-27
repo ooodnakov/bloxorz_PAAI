@@ -47,7 +47,10 @@ class Display:
 
     @staticmethod
     def quit(event):
-        return event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
+        ESCAPE = event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
+        QUIT = event.type == pygame.QUIT
+        SPACE = event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE
+        return ESCAPE or QUIT or SPACE
 
     @staticmethod
     def get_time():
