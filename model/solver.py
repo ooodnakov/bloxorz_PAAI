@@ -165,13 +165,13 @@ def hill_climbing(state: Control):
         accept_state = []
 
         for move in state.moves:
-            state.set_state(current_state, current_maps)
             if move():
                 delta = state.evaluate()
                 if delta <= current_eval:
                     better_state = state.get_state()
                     get_maps = state.get_maps()
                     accept_state.append((delta, better_state, get_maps))
+            state.set_state(current_state, current_maps)
             
         if accept_state != []:
             next_eval, next_state, next_maps = min(accept_state)
