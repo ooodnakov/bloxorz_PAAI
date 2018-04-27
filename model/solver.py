@@ -50,42 +50,43 @@ def bfs(state: Control):
                 if state.check_goal():
                     return
 
-def dfs_step_by_step(state: Control, timesleep=0.5):
+def dfs_step_by_step(state: Control, timesleep=0.1):
     pygame.init()
     display = Display(title='Bloxorz Game', map_size=(state.size[0], state.size[1]))
 
     while state.stack:
         current_state, current_maps = state.stack.pop()
         
-
         print("POP: ( %s )" % current_state)
-
+        
         for move in state.moves:
             state.set_state(current_state, current_maps)
 
             print_stack(state.stack, "dfs")
             state.maps.print_current()
-            state.draw_maps()
             state.draw_box()
+            state.draw_maps()
             display.update()
-
             time.sleep(timesleep)
             os.system("clear")
+
             if move():
                 print_stack(state.stack, "dfs")
                 state.maps.print_current()
-
                 time.sleep(timesleep)
+                os.system("clear")
                 if state.check_goal():
                     print("WINNER!")
-                    return state, display
+                    state.maps.print_current()
+                    state.draw_box()
+                    state.draw_maps()
+                    display.update()
+                    time.sleep(timesleep)
+                    return state
+        os.system("clear")
+        
 
-            os.system("clear")
-            state.draw_maps()
-            state.draw_box()
-            display.update()
-
-def bfs_step_by_step(state: Control, timesleep=0.5):
+def bfs_step_by_step(state: Control, timesleep=0.2):
     pygame.init()
     display = Display(title='Bloxorz Game', map_size=(state.size[0], state.size[1]))
 
@@ -99,26 +100,27 @@ def bfs_step_by_step(state: Control, timesleep=0.5):
 
             print_stack(state.stack, "bfs")
             state.maps.print_current()
-            state.draw_maps()
             state.draw_box()
+            state.draw_maps()
             display.update()
-
             time.sleep(timesleep)
             os.system("clear")
+
             if move():
-                
                 print_stack(state.stack, "bfs")
                 state.maps.print_current()
                 time.sleep(timesleep)
-
+                os.system("clear")
                 if state.check_goal():
                     print("WINNER!")
-                    return state, display
+                    state.maps.print_current()
+                    state.draw_box()
+                    state.draw_maps()
+                    display.update()
+                    time.sleep(timesleep)
+                    return state
                     
             os.system("clear")
-            state.draw_maps()
-            state.draw_box()
-            display.update()
 
 def dfs_path(state: Control):
     stack = [[state.start], ]

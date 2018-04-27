@@ -127,11 +127,11 @@ def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
             if view == '1':
                 bfs_step_by_step(state)
             elif view == '2':
-                result = dfs_path(state)
+                result = bfs_path(state)
                 deltatime(Start_Time)   
                 draw_path_2D(result, level=level)
             elif view == '3':
-                result = dfs_path(state)
+                result = bfs_path(state)
                 deltatime(Start_Time)
                 draw_path_3D(result, level=level, map_size=(size[0], size[1]))
         elif algorithm == Algorithm.HILL:
@@ -139,11 +139,11 @@ def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
                 print("Hill Climbing do not support to View Step By Step !")
                 return
             elif view == '2':
-                result = dfs_path(state)
+                result = hill_climbing(state)
                 deltatime(Start_Time)   
                 draw_path_2D(result, level=level)
             elif view == '3':
-                result = dfs_path(state)
+                result = hill_climbing(state)
                 deltatime(Start_Time)
                 draw_path_3D(result, level=level, map_size=(size[0], size[1]))
     time.sleep(1)
