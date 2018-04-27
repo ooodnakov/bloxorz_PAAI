@@ -2,6 +2,7 @@
 ## Requirements Lib
 ```
 pip3 install -r requirement.txt
+```
 ## Run
 ```
 python3 run.py \path_to_level options view
