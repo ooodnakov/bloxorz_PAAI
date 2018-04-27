@@ -131,6 +131,8 @@ def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
                 deltatime(Start_Time)   
                 draw_path_2D(result, level=level)
             elif view == '3':
+                result = dfs_path(state)
+                deltatime(Start_Time)
                 draw_path_3D(result, level=level, map_size=(size[0], size[1]))
         elif algorithm == Algorithm.HILL:
             if view == '1':
@@ -162,7 +164,7 @@ if __name__=="__main__":
         elif option == "hill":
             main(level=level, Play_handle=False, algorithm=Algorithm.HILL, view=view)
         else: 
-            print("Please read file README.md for more detail. thanks!")
+            print("Please read file README.md for more details. thanks!")
     else:
         # Edit here
         main(level=Level.lv_test, Play_handle=False, algorithm=Algorithm.DFS, view='3')
