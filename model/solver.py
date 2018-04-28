@@ -155,6 +155,8 @@ def bfs_path(state: Control):
     
 def hill_climbing(state: Control):
     state.eval_func()
+    print("Eval_Maps")
+    print(state.eval_maps)
     count = 0
     path = [] 
     all_accept_state = []
@@ -164,8 +166,8 @@ def hill_climbing(state: Control):
         current_state = state.get_state()
         current_maps = state.get_maps()
         current_eval = state.evaluate()
-        path.append(current_state)
 
+        path.append(current_state)
         accept_state = []
 
         for move in state.moves:
@@ -177,8 +179,7 @@ def hill_climbing(state: Control):
                     accept_state.append((delta, better_state, get_maps))
                 
             state.set_state(current_state, current_maps)
-                
-            
+                  
         if accept_state != []:
             next_eval, next_state, next_maps = min(accept_state)
             best_state.append(next_state)
@@ -187,7 +188,7 @@ def hill_climbing(state: Control):
             if next_state == state.end:
                 path.append(next_state)
                 return path
-            
+
             state.set_state(next_state, next_maps)
         else: 
             try:
@@ -202,9 +203,10 @@ def hill_climbing(state: Control):
                     else:
                         path.pop()
                         state.set_state(next_state, next_maps)
-                        break
+                    break
             except:
                 return None
+                
 
 
 def handle(state: Control, map_size= (0,0)):

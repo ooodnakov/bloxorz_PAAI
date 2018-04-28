@@ -131,22 +131,25 @@ class Control:
         goal = self.maps.end
         y , x =  self.size
         eval_maps = np.full((y, x), 0)
-
+       
         for i in range(y):
             for j in range(x):
                 delta = self.Distance([i,j], goal)
                 eval_maps[i, j] = delta
+
+        eval_maps[goal[0]][goal[1]] = 0
+
         self.eval_maps = eval_maps
         return eval_maps
-    
+
     def evaluate(self):
         if len(self.current) == 2:
             point1, point2 = self.current
-            self.curr_evaluate = (self.eval_maps[point1[0], point1[1]] + self.eval_maps[point2[0], point2[1]])
+            self.curr_evaluate = (self.eval_maps[point1[0], point1[1]] + self.eval_maps[point2[0], point2[1]])/2
             return self.curr_evaluate
         elif len(self.current) == 1:
             point = self.current[0]
-            self.curr_evaluate = self.eval_maps[point[0], point[1]]*2
+            self.curr_evaluate = self.eval_maps[point[0], point[1]]
             return self.curr_evaluate
     
     def get_evaluate(self):

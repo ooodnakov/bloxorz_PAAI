@@ -168,7 +168,3 @@ if __name__=="__main__":
     else:
         # Edit here
         main(level=Level.lv_test, Play_handle=False, algorithm=Algorithm.DFS, view='3')
-        
-# Hill 1.1 1.2 1.3 2 3 4 4.2 5 6 6.1 8 8.1
-# DFS 1.1 1.3 4.1 4.2 6
-# BFS 1.1 1.3 4.1 4.2 6
