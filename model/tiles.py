@@ -25,12 +25,16 @@ class tile:
         self.obj = obj
         self.location = location
         self.colors = colors['white']
+        self.set_color()
+        
+        
+    def set_color(self):
 
         if self.type == 1:
             self.colors = colors['gray']
         elif self.type == 2:
             self.colors = colors['orange']
-        
+
         if self.obj != None:
             if 'x' in str(self.obj.symbol):
                 self.colors = colors['blue']
@@ -68,14 +72,4 @@ class tile:
     
     def set_obj(self, obj):
         self.obj = obj
-        if self.obj != None:
-            if 'x' in str(self.obj.symbol):
-                self.colors = colors['blue']
-            elif 'q' in str(self.obj.symbol):
-                self.colors = colors['pink']
-            elif 'o' in str(self.obj.symbol):
-                self.colors = colors['red']
-            elif 'c' in str(self.obj.symbol):
-                self.colors = colors['green']
-            elif '$' in str(self.obj.symbol):
-                self.colors = colors['yellow']
+        self.set_color()

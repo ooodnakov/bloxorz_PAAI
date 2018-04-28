@@ -17,13 +17,11 @@ class Control:
         # BOX
         self.start = maps.current_box.location
         self.current = maps.current_box.location
-        self.pre = maps.current_box.location
         
         # MAP
         self.maps = maps
         self.start_maps = self.maps.maps[:]
         self.curr_maps = self.start_maps
-        self.pre_maps = self.start_maps
         self.size = maps.size
 
         self.stack = [(self.start, self.start_maps)] 
@@ -35,11 +33,8 @@ class Control:
         self.moves = (self.move_up, self.move_down, self.move_right, self.move_left)
 
     def move_up(self):
-        # self.pre = self.current
-        # self.pre_maps = deepcopy(self.curr_maps)
         self.maps.current_box.move_up()
         if not self.check_box_on_maps():
-            # self.set_state(self.pre, self.pre_maps)
             return False
         else:
             self.update_current_location()
@@ -48,11 +43,8 @@ class Control:
             return True 
     
     def move_down(self):
-        # self.pre = self.current
-        # self.pre_maps = deepcopy(self.curr_maps)
         self.maps.current_box.move_down()
         if not self.check_box_on_maps():
-            # self.set_state(self.pre, self.pre_maps)
             return False
         else:
             self.update_current_location()
@@ -61,11 +53,8 @@ class Control:
             return True 
     
     def move_right(self):
-        # self.pre = self.current
-        # self.pre_maps = deepcopy(self.curr_maps)
         self.maps.current_box.move_right()
         if not self.check_box_on_maps():
-            # self.set_state(self.pre, self.pre_maps)
             return False
         else:
             self.update_current_location()
@@ -74,11 +63,8 @@ class Control:
             return True 
     
     def move_left(self):
-        # self.pre = self.current
-        # self.pre_maps = deepcopy(self.curr_maps)
         self.maps.current_box.move_left()
         if not self.check_box_on_maps():
-            # self.set_state(self.pre, self.pre_maps)
             return False
         else:
             self.update_current_location()

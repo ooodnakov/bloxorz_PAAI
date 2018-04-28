@@ -17,14 +17,12 @@ class swQ:
     def set_bridge(self, bridge):
         self.bridge = bridge
 
-    def change_active(self): #update lai map
+    def change_active(self):
         self.active = not self.active
-        # active lien tuc
         if self.type == 0: 
             self.bridge.change_active()
             return True
         else:
-        # active chi mot lan duy nhat
             if self.bridge.check_times_active():
                 return False
             else:
@@ -49,14 +47,12 @@ class swX:
     def set_bridge(self, bridge):
         self.bridge = bridge
 
-    def change_active(self): #update lai map
+    def change_active(self):
         self.active = not self.active
-        # active lien tuc
         if self.type == 0: 
             self.bridge.change_active()
             return True
         else:
-            # active chi mot lan duy nhat
             if self.bridge.check_times_active():
                 return False
             else:

@@ -85,75 +85,75 @@ class maps:
     def updateMaps(self):
         # Load swO to Maps
         if len(self.swO) != 0:
-            for one in self.swO:
-                self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
+            for child in self.swO:
+                self.maps[int(child.location[0])][int(child.location[1])].set_obj(child)
         # Load swQ to Maps
         if len(self.swQ) != 0:
-            for one in self.swQ:
-                self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
+            for child in self.swQ:
+                self.maps[int(child.location[0])][int(child.location[1])].set_obj(child)
         # Load swX to Maps
         if len(self.swX) != 0:
-            for one in self.swX:
-                self.maps[int(one.location[0])][int(one.location[1])].set_obj(one)
+            for child in self.swX:
+                self.maps[int(child.location[0])][int(child.location[1])].set_obj(child)
 
         if len(self.Brid) != 0:
-            for one in self.Brid:
-                if one.type == 1: # One tile
-                    if one.active == True:
-                        self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 1
+            for child in self.Brid:
+                if child.type == 1: # child tile
+                    if child.active == True:
+                        self.maps[int(child.location[0][0])][int(child.location[0][1])].type = 1
                     else: 
-                        self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 0
-                    self.maps[int(one.location[0][0])][int(one.location[0][1])].set_obj(one)
-                elif one.type == 2: # Two tile
-                    if one.active == True:
-                        self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 1
+                        self.maps[int(child.location[0][0])][int(child.location[0][1])].type = 0
+                    self.maps[int(child.location[0][0])][int(child.location[0][1])].set_obj(child)
+                elif child.type == 2: # Two tile
+                    if child.active == True:
+                        self.maps[int(child.location[0][0])][int(child.location[0][1])].type = 1
                     else: 
-                        self.maps[int(one.location[0][0])][int(one.location[0][1])].type = 0
-                    self.maps[int(one.location[0][0])][int(one.location[0][1])].set_obj(one)
+                        self.maps[int(child.location[0][0])][int(child.location[0][1])].type = 0
+                    self.maps[int(child.location[0][0])][int(child.location[0][1])].set_obj(child)
  
-                    if one.active == True:
-                        self.maps[int(one.location[1][0])][int(one.location[1][1])].type = 1
+                    if child.active == True:
+                        self.maps[int(child.location[1][0])][int(child.location[1][1])].type = 1
                     else: 
-                        self.maps[int(one.location[1][0])][int(one.location[1][1])].type = 0
-                    self.maps[int(one.location[1][0])][int(one.location[1][1])].set_obj(one)
+                        self.maps[int(child.location[1][0])][int(child.location[1][1])].type = 0
+                    self.maps[int(child.location[1][0])][int(child.location[1][1])].set_obj(child)
     
     def refreshBox(self):
-        if not self.__check_isFloor(self.current_box):
+        if not self.__onFloor(self.current_box):
             self.current_box.location = self.current_box.pre_location
             return False
         return True
 
     def checkSWQ(self):
-        for one in self.current_box.location:
-            y, x = one
+        for child in self.current_box.location:
+            y, x = child
             if type(self.maps[y][x].obj) is swQ:
                 if self.maps[y][x].obj.change_active():
                     self.__updateSWQ(self.maps[y][x].obj)
                 
     def checkSWX(self):
-        for one in self.current_box.location:
-            y, x = one
+        for child in self.current_box.location:
+            y, x = child
             if type(self.maps[y][x].obj) is swX:
                 if self.current_box.is_doubleBox() and self.current_box.is_standing():
                     if self.maps[y][x].obj.change_active():
                         self.__updateSWX(self.maps[y][x].obj)
 
     def __updateSWX(self, swXObj):
-        for one in self.swX:
-            if one.symbol == swXObj.symbol:
-                self.swX[self.swX.index(one)].active = swXObj.active
+        for child in self.swX:
+            if child.symbol == swXObj.symbol:
+                self.swX[self.swX.index(child)].active = swXObj.active
                 self.__updateBrid(swXObj.bridge)
     
     def __updateSWQ(self, swQObj):
-        for one in self.swQ:
-            if one.symbol == swQObj.symbol:
-                self.swQ[self.swQ.index(one)].active = swQObj.active
+        for child in self.swQ:
+            if child.symbol == swQObj.symbol:
+                self.swQ[self.swQ.index(child)].active = swQObj.active
                 self.__updateBrid(swQObj.bridge)
     
     def __updateSWO(self, swOObj):
-        for one in self.swO:
-            if one.symbol == swOObj.symbol:
-                self.swO[self.swO.index(one)] = swOObj
+        for child in self.swO:
+            if child.symbol == swOObj.symbol:
+                self.swO[self.swO.index(child)] = swOObj
                 self.updateMaps()
     
     def __is_goal(self):
@@ -162,7 +162,7 @@ class maps:
     def check_goal(self):
         return self.current_box.is_standing() and self.current_box.is_doubleBox() and self.__is_goal()
      
-    def __check_life(self, box):
+    def __is_valid(self, box):
         self.checkSWQ()
         self.checkSWX()
         if len(box.location) == 1:
@@ -175,19 +175,19 @@ class maps:
                     return False
             return True
     
-    def __check_isFloor(self, box):
+    def __onFloor(self, box):
         width, height = self.size
         if len(box.location) == 1:
             y, x = box.location[0]
             if y < 0 or y >= width or x < 0 or x >= height:
                 return False
-            return self.__check_life(box)
+            return self.__is_valid(box)
         elif len(box.location) == 2:
             for child in box.location:
                 y , x = child
                 if y < 0 or y >= width or x < 0 or x >= height:
                     return False
-            return self.__check_life(box)
+            return self.__is_valid(box)
 
     def __updateBrid(self, bridObj):
         index = bridObj.location

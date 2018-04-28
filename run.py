@@ -3,7 +3,6 @@
 """Run"""
 import pygame
 import sys
-import argparse
 import os
 import time
 from model.solver import dfs_path, bfs_path, handle, hill_climbing, dfs_step_by_step, bfs_step_by_step
@@ -164,7 +163,7 @@ if __name__=="__main__":
         elif option == "hill":
             main(level=level, Play_handle=False, algorithm=Algorithm.HILL, view=view)
         else: 
-            print("Please read file README.md for more details. thanks!")
+            print("Error! Please read file README.md for more details. thanks")
     else:
         # Edit here
         main(level=Level.lv_test, Play_handle=False, algorithm=Algorithm.DFS, view='3')
