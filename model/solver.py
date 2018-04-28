@@ -24,6 +24,7 @@ def dfs(state: Control):
     while state.stack:
         current_state = state.stack.pop()
         current_maps = state.stack_maps.pop()
+        state.visted.append((current_state, current_maps))
         for move in state.moves:
             state.set_state(current_state, current_maps)
             if move():
@@ -35,6 +36,7 @@ def dfs_recursion(state: Control):
         return
     current_state = state.stack.pop()
     current_maps = state.stack_maps.pop()
+    state.visted.append((current_state, current_maps))
     for move in state.moves:
         state.set_state(current_state, current_maps)
         if move():
@@ -44,6 +46,7 @@ def bfs(state: Control):
     while state.stack:
         current_state = state.stack.pop(0)
         current_maps = state.stack_maps.pop(0)
+        state.visted.append((current_state, current_maps))
         for move in state.moves:
             state.set_state(current_state, current_maps)
             if move():
@@ -59,6 +62,8 @@ def dfs_step_by_step(state: Control, timesleep=0.1):
         
         print("POP: ( %s )" % current_state)
         
+        state.visted.append((current_state, current_maps))
+
         for move in state.moves:
             state.set_state(current_state, current_maps)
 
@@ -95,6 +100,8 @@ def bfs_step_by_step(state: Control, timesleep=0.2):
 
         print("POP: ( %s )" % current_state)
 
+        state.visted.append((current_state, current_maps))
+
         for move in state.moves:
             state.set_state(current_state, current_maps)
 
@@ -127,6 +134,7 @@ def dfs_path(state: Control):
     while state.stack:
         current_state, current_maps = state.stack.pop()
         path = stack.pop()
+        state.visted.append((current_state, current_maps))
         for move in state.moves:
             state.set_state(current_state, current_maps)
             if move():
@@ -142,6 +150,7 @@ def bfs_path(state: Control):
     while state.stack:
         current_state, current_maps = state.stack.pop(0)
         path = stack.pop(0)
+        state.visted.append((current_state, current_maps))
         for move in state.moves:
             state.set_state(current_state, current_maps)
             if move():
@@ -169,6 +178,8 @@ def hill_climbing(state: Control):
 
         path.append(current_state)
         accept_state = []
+
+        state.visted.append((current_state, current_maps))
 
         for move in state.moves:
             if move():

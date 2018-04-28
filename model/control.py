@@ -100,7 +100,6 @@ class Control:
         if state in [i for (i, j) in self.visted]:
             return False
         else:
-            self.visted.append((state, maps))
             self.stack.append((state, maps))
             return True
     
