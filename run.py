@@ -40,7 +40,8 @@ def draw_path_3D(solution, timesleep=0.5, level=Level.lv0, map_size = (0,0)):
     pygame.init()
     display = Display(title='Bloxorz Game', map_size=map_size)
     if solution != None:
-        print("Found solution success!")
+        print("Success!")
+        print("Step: %d" % len(solution))
         print(solution)
         choiselv = maps(level)
 
@@ -71,7 +72,8 @@ def draw_path_3D(solution, timesleep=0.5, level=Level.lv0, map_size = (0,0)):
 
 def draw_path_2D(solution, timesleep=0.5, level=Level.lv0):
     if solution != None:
-        print("Found solution success!")
+        print("Success!")
+        print("Step: %d" % len(solution))
         print(solution)
         choiselv = maps(level)
 
