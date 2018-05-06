@@ -16,18 +16,21 @@ class Algorithm:
     HILL= 3
 
 class Level:
-    lv0  = "./level/0.json"
     lv1  = "./level/1.json"
     lv2 = "./level/2.json"
     lv3 = "./level/3.json"
+    lv4 = "./level/4.json"
+    lv5 = "./level/5.json"
+    lv6 = "./level/6.json"
     lv7 = "./level/7.json"
+    lv8 = "./level/8.json"
+    lv9 = "./level/9.json"
     lv10 = "./level/10.json"
     lv11 = "./level/11.json"
     lv12 = "./level/12.json"
     lv13 = "./level/13.json"
     lv14 = "./level/14.json"
     lv15 = "./level/15.json"
-    lv_test = "./level/0.json"
     
 def deltatime(start_time):
     result = time.time() - start_time
@@ -36,7 +39,7 @@ def deltatime(start_time):
 def flatMap(path):
     return [y for x in path for y in x]
 
-def draw_path_3D(solution, timesleep=0.5, level=Level.lv0, map_size = (0,0)):
+def draw_path_3D(solution, timesleep=0.5, level=Level.lv1, map_size = (0,0)):
     pygame.init()
     display = Display(title='Bloxorz Game', map_size=map_size)
     if solution != None:
@@ -70,7 +73,7 @@ def draw_path_3D(solution, timesleep=0.5, level=Level.lv0, map_size = (0,0)):
         print("Dir Level: %s" % level)
         return
 
-def draw_path_2D(solution, timesleep=0.5, level=Level.lv0):
+def draw_path_2D(solution, timesleep=0.5, level=Level.lv1):
     if solution != None:
         print("Success!")
         print("Step: %d" % len(solution))
@@ -102,7 +105,7 @@ def draw_path_2D(solution, timesleep=0.5, level=Level.lv0):
         print("Dir Level: %s" % level)
         return
     
-def main(level=Level.lv0, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
+def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
     print("Processing...")
     Maps = maps(level)
     size = Maps.size
@@ -168,4 +171,4 @@ if __name__=="__main__":
             print("Error! Please read file README.md for more details. thanks")
     else:
         # Edit here
-        main(level=Level.lv_test, Play_handle=False, algorithm=Algorithm.DFS, view='3')
+        main(level=Level.lv1, Play_handle=False, algorithm=Algorithm.DFS, view='3')
