@@ -9,6 +9,7 @@ from drawing.box import Box
 from model.box import Box as cube
 import pygame
 from copy import deepcopy
+from heapq import heappop, heappush, heapify
 
 def print_stack(stack, algorithm):
     if algorithm=="dfs":
@@ -20,21 +21,11 @@ def print_stack(stack, algorithm):
         for state in stack:
             print("( %s ) " % state[0])
 
-def dfs(state: Control):
-    while state.stack:
-        current_state = state.stack.pop()
-        current_maps = state.stack_maps.pop()
-        state.visted.append((current_state, current_maps))
-        for move in state.moves:
-            state.set_state(current_state, current_maps)
-            if move():
-                if state.check_goal():
-                    return
 
 def dfs_recursion(state: Control):
     if state.check_goal():
         return
-    current_state = state.stack.pop()
+    current_state = state.sdfs_pathtack.pop()
     current_maps = state.stack_maps.pop()
     state.visted.append((current_state, current_maps))
     for move in state.moves:
@@ -42,16 +33,6 @@ def dfs_recursion(state: Control):
         if move():
             dfs_recursion(state)
 
-def bfs(state: Control):
-    while state.stack:
-        current_state = state.stack.pop(0)
-        current_maps = state.stack_maps.pop(0)
-        state.visted.append((current_state, current_maps))
-        for move in state.moves:
-            state.set_state(current_state, current_maps)
-            if move():
-                if state.check_goal():
-                    return
 
 def dfs_step_by_step(state: Control, timesleep=0.1):
     pygame.init()
@@ -162,10 +143,11 @@ def bfs_path(state: Control):
     return None
 
     
-def hill_climbing(state: Control):
+def hill_climbing(state: Control,verbose=None):
     state.eval_func()
-    print("Eval_Maps")
-    print(state.eval_maps)
+    if verbose:
+        print("Eval_Maps")
+        print(state.eval_maps)
     count = 0
     path = [] 
     all_accept_state = []
@@ -204,8 +186,9 @@ def hill_climbing(state: Control):
         else: 
             try:
                 count +=1
-                print("Try again!", count)
-                print(path)
+                if verbose:
+                    print("Try again!", count)
+                    print(path)
                 while True:
                     next_eval, next_state, next_maps = all_accept_state.pop()
                     if next_state in best_state:
@@ -217,9 +200,72 @@ def hill_climbing(state: Control):
                     break
             except:
                 return None
+
+def heuristic(state, goal,heur='none'):
+    if 'none':
+        return 0
+    if 'l1':
+        return sum(abs([x-y for x,y in zip(state,goal)]))//2
                 
 
+def astar(state: Control):
+    stack = [[0, [state.start]], ]
+    heap = [[0, state.start], ]
+    costs = {tuple(tuple(x) for x in state.start) : (0, None)}
+    while heap:
+        current_cost, current_state = heappop(heap)
+        _, current_maps = state.stack.pop()
+        #state.visted.append((current_state, current_maps))
+        #print(current_state)
+        for move in state.moves:
+            state.set_state(current_state, current_maps)
+            if move():
+                #print(costs,move.__name__)
+                if state.check_goal():
+                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1, current_state)
+                    path = []
+                    #print(state.current)
+                    cur = state.current
+                    while cur:
+                        path.append(cur)
+                        cur = costs[tuple(tuple(x) for x in cur)][1]
+                    path.reverse()
+                    return path
+                if tuple(tuple(x) for x in state.current) not in costs:
+                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1 + heuristic(state.current[0],state.end[0],'l1'), current_state)
+                    heappush(heap, [current_cost+1, state.current])
+                elif current_cost + 1 < costs[tuple(tuple(x) for x in state.current)][0]:
+                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1,current_state)
 
+                    
+
+# def astar(self,start,goal,env,rod,dist='A'):
+#     Q = []
+#     C = {}
+#     C_space = self.C_space(env,rod)
+#     heappush(Q,(0,start))
+#     C[start] = 0
+#     parent_table = {start:None}
+#     step=0
+#     while Q:
+#         step+=1
+#         now = heappop(Q)
+#         if now[1] == goal:
+#             print('Number of steps: {}\nFinal cost: {}'.format(step,C[goal]))
+#             return(self.plan(goal,parent_table))
+#         for neighbor in self.neighbors(now[1],C_space):
+#             if neighbor not in parent_table:
+#                 parent_table[neighbor]= now[1]
+#                 cost = C[now[1]]+1
+#                 C[neighbor]=cost
+#                 heappush(Q,(cost+self.distance(neighbor,goal,dist),neighbor))
+#             else:
+#                 if C[now[1]]+1<C[neighbor]:
+#                     C[neighbor] = C[now[1]]+1
+#                     parent_table[neighbor] = now
+
+
+            
 def handle(state: Control, map_size= (0,0)):
     state.Play_handle = True
     pygame.init()
