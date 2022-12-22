@@ -153,7 +153,8 @@ def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
                 Algorithm.ASTAR: astar
             }
             algo = algo_map[algorithm]
-            result = algo(state)
+            result, it = algo(state)
+            print('States visited', it)
             if view == '2':
                 draw_path_2D(result, level=level)
             elif view == '3':
@@ -194,7 +195,7 @@ if __name__=="__main__":
     else:
         # Edit here
         level = Level.lv4
-        main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view='2')
+        main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='2')
         # main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view='4')
         # main(level=level, Play_handle=False, algorithm=Algorithm.DFS, view='4')
         # main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='4')
