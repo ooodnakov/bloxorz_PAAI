@@ -131,50 +131,45 @@ def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
     Maps = maps(level)
     size = Maps.size
     state = Control(Maps)
-    overhead = timeit.timeit(f"Control(maps('{level}'))", number=iters,globals=globals())/iters
     if Play_handle:
         state.Play_handle = Play_handle
         handle(state, map_size=(size[0], size[1]))
     else:
         Start_Time = time.time()
-        if algorithm == Algorithm.DFS:
-            if view == '1':
-                dfs_step_by_step(state)
-            else:
-                mean_time = timeit.timeit(f"dfs_path(Control(maps('{level}')))", number=iters,globals=globals())/iters
+        if view == '1':
+            algo_map = {
+                Algorithm.DFS: dfs_step_by_step,
+                Algorithm.BFS: bfs_step_by_step,
+                Algorithm.HILL: None,
+                Algorithm.ASTAR: None
+            }
+            algo = algo_map[algorithm]
+            algo(state)
+        else:
+            algo_map = {
+                Algorithm.DFS: dfs_path,
+                Algorithm.BFS: bfs_path,
+                Algorithm.HILL: hill_climbing,
+                Algorithm.ASTAR: astar
+            }
+            algo = algo_map[algorithm]
+            result = algo(state)
+            if view == '2':
+                draw_path_2D(result, level=level)
+            elif view == '3':
+                draw_path_3D(result, level=level, map_size=(size[0], size[1]))
+            elif view == '4':
+                algo_name_map = {
+                    Algorithm.DFS: 'dfs_path',
+                    Algorithm.BFS: 'bfs_path',
+                    Algorithm.HILL: 'hill_climbing',
+                    Algorithm.ASTAR: 'astar'
+                }
+                overhead = timeit.timeit(f"Control(maps('{level}'))", number=iters,globals=globals())/iters
+                algo_name = algo_name_map[algorithm]
+                mean_time = timeit.timeit(f"{algo_name}(Control(maps('{level}')))", number=iters,globals=globals())/iters
                 print(f'Average time: {mean_time-overhead:.5f}')
-                result = dfs_path(state)
-        elif algorithm == Algorithm.BFS:
-            if view == '1':
-                bfs_step_by_step(state)
-            else:
-                mean_time = timeit.timeit(f"bfs_path(Control(maps('{level}')))", number=iters,globals=globals())/iters
-                print(f'Average time: {mean_time-overhead:.5f}')
-                result = bfs_path(state)
-        elif algorithm == Algorithm.HILL:
-            if view == '1':
-                print("Hill Climbing do not support to View Step By Step !")
-                return
-            else:
-                mean_time = timeit.timeit(f"hill_climbing(Control(maps('{level}')))", number=iters,globals=globals())/iters
-                print(f'Average time: {mean_time-overhead:.5f}')
-                result = hill_climbing(state)
-        elif algorithm == Algorithm.ASTAR:
-            if view == '1':
-                print("Astar do not support to View Step By Step !")
-                return
-            else:
-                mean_time = timeit.timeit(f"astar(Control(maps('{level}')))", number=iters,globals=globals())/iters
-                print(f'Average time: {mean_time-overhead:.5f}')
-                result = astar(state)
-        deltatime(Start_Time)  
-        if view == '4':
-            performance(result, level, algorithm)
-            return
-        elif view == '2': 
-            draw_path_2D(result, level=level)
-        elif view == '3':
-            draw_path_3D(result, level=level, map_size=(size[0], size[1]))
+        deltatime(Start_Time)
     time.sleep(1)
     sys.exit()
 
@@ -199,7 +194,7 @@ if __name__=="__main__":
     else:
         # Edit here
         level = Level.lv4
-        main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view='3')
+        main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view='2')
         # main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view='4')
         # main(level=level, Play_handle=False, algorithm=Algorithm.DFS, view='4')
         # main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='4')

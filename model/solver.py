@@ -220,11 +220,11 @@ def astar(state: Control):
         for move in state.moves:
             state.set_state(current_state, current_maps)
             if move():
-                #print(costs,move.__name__)
+                print(move.__name__)
                 if state.check_goal():
                     costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1, current_state)
                     path = []
-                    #print(state.current)
+                    print(state.current)
                     cur = state.current
                     while cur:
                         path.append(cur)
@@ -232,7 +232,7 @@ def astar(state: Control):
                     path.reverse()
                     return path
                 if tuple(tuple(x) for x in state.current) not in costs:
-                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1 + heuristic(state.current[0],state.end[0],'l1'), current_state)
+                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1 + heuristic(state.current[0],state.end[0],'none'), current_state)
                     heappush(heap, [current_cost+1, state.current])
                 elif current_cost + 1 < costs[tuple(tuple(x) for x in state.current)][0]:
                     costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1,current_state)
