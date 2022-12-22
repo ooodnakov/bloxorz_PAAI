@@ -202,10 +202,10 @@ def hill_climbing(state: Control,verbose=None):
                 return None
 
 def heuristic(state, goal,heur='none'):
-    if 'none':
+    if heur == 'none':
         return 0
-    if 'l1':
-        return sum(abs([x-y for x,y in zip(state,goal)]))//2
+    if heur == 'l1':
+        return sum([abs(x-y) for x,y in zip(state,goal)])//2
                 
 
 def astar(state: Control):
@@ -215,12 +215,12 @@ def astar(state: Control):
     while heap:
         current_cost, current_state = heappop(heap)
         _, current_maps = state.stack.pop()
-        #state.visted.append((current_state, current_maps))
-        #print(current_state)
+        state.visted.append((current_state, current_maps))
+        print([x.__name__ for x in state.moves])
         for move in state.moves:
             state.set_state(current_state, current_maps)
             if move():
-                print(move.__name__)
+                print(move.__name__,current_state,current_cost,len(heap),heuristic(state.current[0],state.end[0],heur='l1'))
                 if state.check_goal():
                     costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1, current_state)
                     path = []
@@ -230,13 +230,20 @@ def astar(state: Control):
                         path.append(cur)
                         cur = costs[tuple(tuple(x) for x in cur)][1]
                     path.reverse()
+                    print(path)
                     return path
                 if tuple(tuple(x) for x in state.current) not in costs:
-                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1 + heuristic(state.current[0],state.end[0],'none'), current_state)
-                    heappush(heap, [current_cost+1, state.current])
+                    print('new',state.current)
+                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1, current_state)
+                    heappush(heap, [current_cost + 1 + heuristic(state.current[0],state.end[0],'none'), state.current])
                 elif current_cost + 1 < costs[tuple(tuple(x) for x in state.current)][0]:
+                    print('update')
                     costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1,current_state)
-
+            print('cant',)
+    #print('shiT!','\n'.join([str(x)+': '+str(y)+'\n' for x,y in costs.items()]),heap)
+    return None, step
+#[[[3, 1]], [[3, 2], [3, 3]], [[4, 2], [4, 3]], [[4, 4]], [[4, 5], [4, 6]], [[4, 7]], [[3, 7], [2, 7]], [[3, 8], [2, 8]], [[4, 8]],
+# [[4, 9], [4, 10]], [[4, 11]], [[4, 12], [4, 13]], [[4, 14]], [[3, 14], [2, 14]], [[3, 13], [2, 13]], [[1, 13]]]
                     
 
 # def astar(self,start,goal,env,rod,dist='A'):
