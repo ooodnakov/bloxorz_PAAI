@@ -121,10 +121,10 @@ def dfs_path(state: Control):
             if move():
                 if state.check_goal():
                     result = path + [state.current]
-                    return result 
+                    return (result, len(state.visted))
                 stack.append(path + [state.current])
                 
-    return None
+    return (None, len(state.visted))
 
 def bfs_path(state: Control):
     stack = [[state.start], ]
@@ -137,10 +137,10 @@ def bfs_path(state: Control):
             if move():
                 if state.check_goal():
                     result = path + [state.current]
-                    return result
+                    return (result, len(state.visted))
                 stack.append(path + [state.current])
                 
-    return None
+    return (None, len(state.visted))
 
     
 def hill_climbing(state: Control,verbose=None):
@@ -180,7 +180,7 @@ def hill_climbing(state: Control,verbose=None):
 
             if next_state == state.end:
                 path.append(next_state)
-                return path
+                return (path, len(state.visted))
 
             state.set_state(next_state, next_maps)
         else: 
@@ -199,7 +199,7 @@ def hill_climbing(state: Control,verbose=None):
                         state.set_state(next_state, next_maps)
                     break
             except:
-                return None
+                return (None, len(state.visted))
 
 def heuristic(state, goal,heur='none'):
     if 'none':
@@ -212,7 +212,9 @@ def astar(state: Control):
     stack = [[0, [state.start]], ]
     heap = [[0, state.start], ]
     costs = {tuple(tuple(x) for x in state.start) : (0, None)}
+    step = 0
     while heap:
+        step+=1
         current_cost, current_state = heappop(heap)
         _, current_maps = state.stack.pop()
         #state.visted.append((current_state, current_maps))
@@ -230,7 +232,7 @@ def astar(state: Control):
                         path.append(cur)
                         cur = costs[tuple(tuple(x) for x in cur)][1]
                     path.reverse()
-                    return path
+                    return (path, step)
                 if tuple(tuple(x) for x in state.current) not in costs:
                     costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1 + heuristic(state.current[0],state.end[0],'none'), current_state)
                     heappush(heap, [current_cost+1, state.current])
