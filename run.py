@@ -119,37 +119,24 @@ def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
         if algorithm == Algorithm.DFS:
             if view == '1':
                 dfs_step_by_step(state)
-            elif view == '2':
+            else:
                 result = dfs_path(state)
-                deltatime(Start_Time)   
-                draw_path_2D(result, level=level)
-            elif view == '3':
-                result = dfs_path(state)
-                deltatime(Start_Time)
-                draw_path_3D(result, level=level, map_size=(size[0], size[1]))
         elif algorithm == Algorithm.BFS:
             if view == '1':
                 bfs_step_by_step(state)
-            elif view == '2':
+            else:
                 result = bfs_path(state)
-                deltatime(Start_Time)   
-                draw_path_2D(result, level=level)
-            elif view == '3':
-                result = bfs_path(state)
-                deltatime(Start_Time)
-                draw_path_3D(result, level=level, map_size=(size[0], size[1]))
         elif algorithm == Algorithm.HILL:
             if view == '1':
                 print("Hill Climbing do not support to View Step By Step !")
                 return
-            elif view == '2':
+            else:
                 result = hill_climbing(state)
-                deltatime(Start_Time)   
-                draw_path_2D(result, level=level)
-            elif view == '3':
-                result = hill_climbing(state)
-                deltatime(Start_Time)
-                draw_path_3D(result, level=level, map_size=(size[0], size[1]))
+        deltatime(Start_Time)  
+        if view == '2': 
+            draw_path_2D(result, level=level)
+        elif view == '3':
+            draw_path_3D(result, level=level, map_size=(size[0], size[1]))
     time.sleep(1)
     sys.exit()
 
@@ -171,4 +158,4 @@ if __name__=="__main__":
             print("Error! Please read file README.md for more details. thanks")
     else:
         # Edit here
-        main(level=Level.lv1, Play_handle=False, algorithm=Algorithm.DFS, view='3')
+        main(level=Level.lv5, Play_handle=False, algorithm=Algorithm.DFS, view='1')
