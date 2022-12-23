@@ -167,6 +167,7 @@ def hill_climbing(state: Control,verbose=None):
             if move():
                 delta = state.evaluate()
                 if delta <= current_eval:
+                    count +=1
                     better_state = state.get_state()
                     get_maps = state.get_maps()
                     accept_state.append((delta, better_state, get_maps))
@@ -180,16 +181,17 @@ def hill_climbing(state: Control,verbose=None):
 
             if next_state == state.end:
                 path.append(next_state)
-                return (path, len(state.visted))
+                return (path, count)
 
             state.set_state(next_state, next_maps)
         else: 
             try:
-                count +=1
+                
                 if verbose:
                     print("Try again!", count)
                     print(path)
                 while True:
+                    count +=1
                     next_eval, next_state, next_maps = all_accept_state.pop()
                     if next_state in best_state:
                         path.pop()
@@ -199,7 +201,7 @@ def hill_climbing(state: Control,verbose=None):
                         state.set_state(next_state, next_maps)
                     break
             except:
-                return (None, len(state.visted))
+                return (None, count)
 
 def heuristic(state, goal,heur='none'):
     if heur == 'none':
@@ -263,7 +265,7 @@ def astar(state: Control):
                     #print(tuple(tuple(x) for x in state.current),costs[tuple(tuple(x) for x in state.current)])
                     # if cost_maps(state.maps)>0:
                     #     print('c',cost_maps(state.maps))
-                    heappush(heap, [current_cost + 1 + heuristic(state.current[0],state.end[0],'none')- cost_maps(state.maps), state.current])
+                    heappush(heap, [current_cost + 1 + heuristic(state.current[0],state.end[0],'l1')- cost_maps(state.maps), state.current])
                 elif current_cost + 1 - cost_maps(state.maps)< costs[tuple(tuple(x) for x in state.current)][0]:
                     #print('update',current_cost,'<-',costs[tuple(tuple(x) for x in state.current)][0])
                     

@@ -155,7 +155,8 @@ def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
             algo = algo_map[algorithm]
             result, it = algo(state)
             print('States visited', it)
-            print('Steps', len(result))
+            if result:
+                print('Steps', len(result))
             if view == '2':
                 draw_path_2D(result, level=level)
             elif view == '3':
@@ -196,11 +197,19 @@ if __name__=="__main__":
     else:
         # Edit here
         level = Level.lv4
-        #main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='2')
-        main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view='4')
-        main(level=level, Play_handle=False, algorithm=Algorithm.DFS, view='4')
-        main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='4')
-        main(level=level, Play_handle=False, algorithm=Algorithm.HILL, view='4')
+        # #main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='2')
+        # main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view='4')
+        # main(level=level, Play_handle=False, algorithm=Algorithm.DFS, view='4')
+        # main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='4')
+        al = Algorithm.BFS
+        print('---lvl1---')
+        main(level=Level.lv1, Play_handle=False, algorithm=al, view='4')
+        print('---lvl4---')
+        main(level=Level.lv4, Play_handle=False, algorithm=al, view='4')
+        print('---lvl5---')
+        main(level=Level.lv5, Play_handle=False, algorithm=al, view='4')
+        print('---lvl15---')
+        main(level=Level.lv15, Play_handle=False, algorithm=al, view='4')
         sys.exit()
 
   
