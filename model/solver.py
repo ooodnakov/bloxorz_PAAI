@@ -205,8 +205,22 @@ def heuristic(state, goal,heur='none'):
     if heur == 'none':
         return 0
     if heur == 'l1':
-        return sum([abs(x-y) for x,y in zip(state,goal)])//2
-                
+        return sum([abs(x-y) for x,y in zip(state,goal)])
+             
+def cost_maps(maps):
+    cost = 0
+    inc = 10
+    for child in maps.swQ: 
+        if child.active:     
+            cost+=inc
+    for child in maps.swO:   
+        if child.active:     
+            cost+=inc
+    for child in maps.swX:   
+        if child.active:     
+            cost+=inc
+    return 0
+         
 
 def astar(state: Control):
     stack = [[0, [state.start]], ]
@@ -215,37 +229,46 @@ def astar(state: Control):
     step = 0
     while heap:
         step+=1
-        current_cost, current_state = heappop(heap)
-        _, current_maps = state.stack.pop()
+        _, current_state = heappop(heap)
+        for _, current_maps in state.stack:
+            if _ ==current_state:
+                break
+        #_, current_maps = state.stack
+        current_cost, _ = costs[tuple(tuple(x) for x in current_state)]
         state.visted.append((current_state, current_maps))
-        print([x.__name__ for x in state.moves])
+        #print('beg',current_state,state.current)
         for move in state.moves:
             state.set_state(current_state, current_maps)
+            # if state.maps.maps[4][4].type==1:
+            #     print(move.__name__,state.current,'bridge')
+            # if current_maps[4][4].type==1:
+            #     print('\n'.join([''.join([str(y.type) for y in x]) for x in current_maps]))
             if move():
-                print(move.__name__,current_state,current_cost,len(heap),heuristic(state.current[0],state.end[0],heur='l1'))
+                # if state.current==[[4,8]]:
+                #     print('\n'.join([''.join([str(y.type) for y in x]) for x in current_maps]))
+                # print(move.__name__,state.current,current_cost,len(heap))
                 if state.check_goal():
                     costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1, current_state)
                     path = []
-                    print(state.current)
+                    #print(state.current)
                     cur = state.current
                     while cur:
                         path.append(cur)
                         cur = costs[tuple(tuple(x) for x in cur)][1]
                     path.reverse()
-<<<<<<< HEAD
-                    print(path)
-                    return path
-=======
                     return (path, step)
->>>>>>> 3a04bb62b73c6f8451c3695790963ab853f92afd
                 if tuple(tuple(x) for x in state.current) not in costs:
-                    print('new',state.current)
+                    #print('new',state.current)
                     costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1, current_state)
-                    heappush(heap, [current_cost + 1 + heuristic(state.current[0],state.end[0],'none'), state.current])
-                elif current_cost + 1 < costs[tuple(tuple(x) for x in state.current)][0]:
-                    print('update')
-                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1,current_state)
-            print('cant',)
+                    #print(tuple(tuple(x) for x in state.current),costs[tuple(tuple(x) for x in state.current)])
+                    # if cost_maps(state.maps)>0:
+                    #     print('c',cost_maps(state.maps))
+                    heappush(heap, [current_cost + 1 + heuristic(state.current[0],state.end[0],'none')- cost_maps(state.maps), state.current])
+                elif current_cost + 1 - cost_maps(state.maps)< costs[tuple(tuple(x) for x in state.current)][0]:
+                    #print('update',current_cost,'<-',costs[tuple(tuple(x) for x in state.current)][0])
+                    
+                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1- cost_maps(state.maps),current_state)
+                #print('cant')
     #print('shiT!','\n'.join([str(x)+': '+str(y)+'\n' for x,y in costs.items()]),heap)
     return None, step
 #[[[3, 1]], [[3, 2], [3, 3]], [[4, 2], [4, 3]], [[4, 4]], [[4, 5], [4, 6]], [[4, 7]], [[3, 7], [2, 7]], [[3, 8], [2, 8]], [[4, 8]],
@@ -297,7 +320,7 @@ def handle(state: Control, map_size= (0,0)):
                     result = state.move_right()
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
                     result = state.move_left()
-                
+            print('\n'.join([''.join([str(y.type) for y in x]) for x in state.stack[-1][1]]))
             if display.quit(event):
                 return
         state.draw_maps()

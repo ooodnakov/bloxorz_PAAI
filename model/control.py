@@ -65,9 +65,11 @@ class Control:
     def move_left(self):
         self.maps.current_box.move_left()
         if not self.check_box_on_maps():
+            #print('left_failed')
             return False
         else:
             self.update_current_location()
+            #print('left_suc')
             if not self.Play_handle:
                 return self.add_stack() 
             return True

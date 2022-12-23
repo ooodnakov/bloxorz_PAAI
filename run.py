@@ -127,7 +127,7 @@ def draw_path_2D(solution, timesleep=0.5, level=Level.lv1):
     
 def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
     print("Processing...")
-    iters= 50
+    iters= 5
     Maps = maps(level)
     size = Maps.size
     state = Control(Maps)
@@ -155,6 +155,7 @@ def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
             algo = algo_map[algorithm]
             result, it = algo(state)
             print('States visited', it)
+            print('Steps', len(result))
             if view == '2':
                 draw_path_2D(result, level=level)
             elif view == '3':
@@ -172,7 +173,7 @@ def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
                 print(f'Average time: {mean_time-overhead:.5f}')
         deltatime(Start_Time)
     time.sleep(1)
-    sys.exit()
+    #sys.exit()
 
 if __name__=="__main__":
     if len(sys.argv) > 2:
@@ -195,11 +196,11 @@ if __name__=="__main__":
     else:
         # Edit here
         level = Level.lv4
-        main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='2')
-        # main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view='4')
-        # main(level=level, Play_handle=False, algorithm=Algorithm.DFS, view='4')
-        # main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='4')
-        # main(level=level, Play_handle=False, algorithm=Algorithm.HILL, view='4')
-
+        #main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='2')
+        main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view='4')
+        main(level=level, Play_handle=False, algorithm=Algorithm.DFS, view='4')
+        main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='4')
+        main(level=level, Play_handle=False, algorithm=Algorithm.HILL, view='4')
+        sys.exit()
 
   
