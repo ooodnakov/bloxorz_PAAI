@@ -5,7 +5,7 @@ import pygame
 import sys
 import os
 import time
-from model.solver import dfs_path, bfs_path, handle, hill_climbing, dfs_step_by_step, bfs_step_by_step, astar
+from model.solver import dfs_path, bfs_path, handle, hill_climbing, dfs_step_by_step, bfs_step_by_step, astar, dijkstra
 from drawing.display import Display
 from model.map import maps
 from model.control import Control
@@ -16,12 +16,14 @@ class Algorithm:
     BFS = 2
     HILL= 3
     ASTAR = 4
+    DIJKSTRA = 5
 
 algorithm_names = {
     1: 'DFS',
     2: 'BFS',
     3: 'HILL',
-    4: 'ASTAR'
+    4: 'ASTAR',
+    5: 'DIJKSTRA'
 }
 
 class Level:
@@ -141,16 +143,21 @@ def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
                 Algorithm.DFS: dfs_step_by_step,
                 Algorithm.BFS: bfs_step_by_step,
                 Algorithm.HILL: None,
-                Algorithm.ASTAR: None
+                Algorithm.ASTAR: None,
+                Algorithm.DIJKSTRA: None
             }
             algo = algo_map[algorithm]
-            algo(state)
+            if algo:
+                algo(state)
+            else:
+                print('No step-by-step mode for this algorithm!')   
         else:
             algo_map = {
                 Algorithm.DFS: dfs_path,
                 Algorithm.BFS: bfs_path,
                 Algorithm.HILL: hill_climbing,
-                Algorithm.ASTAR: astar
+                Algorithm.ASTAR: astar,
+                Algorithm.DIJKSTRA: dijkstra
             }
             algo = algo_map[algorithm]
             result, it = algo(state)
@@ -166,7 +173,8 @@ def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
                     Algorithm.DFS: 'dfs_path',
                     Algorithm.BFS: 'bfs_path',
                     Algorithm.HILL: 'hill_climbing',
-                    Algorithm.ASTAR: 'astar'
+                    Algorithm.ASTAR: 'astar',
+                    Algorithm.DIJKSTRA: 'dijkstra'
                 }
                 overhead = timeit.timeit(f"Control(maps('{level}'))", number=iters,globals=globals())/iters
                 algo_name = algo_name_map[algorithm]
@@ -174,7 +182,7 @@ def main(level=Level.lv1, Play_handle=True, algorithm=Algorithm.DFS, view='3'):
                 print(f'Average time: {mean_time-overhead:.5f}')
         deltatime(Start_Time)
     time.sleep(1)
-    #sys.exit()
+    sys.exit()
 
 if __name__=="__main__":
     if len(sys.argv) > 2:
@@ -192,24 +200,11 @@ if __name__=="__main__":
             main(level=level, Play_handle=False, algorithm=Algorithm.HILL, view=view)
         elif option == "astar":
             main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view=view)
+        elif option == "dijkstra":
+            main(level=level, Play_handle=False, algorithm=Algorithm.DIJKSTRA, view=view)
         else: 
             print("Error! Please read file README.md for more details. thanks")
     else:
-        # Edit here
-        level = Level.lv4
-        # #main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='2')
-        # main(level=level, Play_handle=False, algorithm=Algorithm.ASTAR, view='4')
-        # main(level=level, Play_handle=False, algorithm=Algorithm.DFS, view='4')
-        # main(level=level, Play_handle=False, algorithm=Algorithm.BFS, view='4')
-        al = Algorithm.BFS
-        print('---lvl1---')
-        main(level=Level.lv1, Play_handle=False, algorithm=al, view='4')
-        print('---lvl4---')
-        main(level=Level.lv4, Play_handle=False, algorithm=al, view='4')
-        print('---lvl5---')
-        main(level=Level.lv5, Play_handle=False, algorithm=al, view='4')
-        print('---lvl15---')
-        main(level=Level.lv15, Play_handle=False, algorithm=al, view='4')
-        sys.exit()
+        main(level=Level.lv1, Play_handle=False, algorithm=Algorithm.BFS, view='3')
 
   
