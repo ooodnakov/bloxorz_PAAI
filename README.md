@@ -2,6 +2,10 @@
 
 https://user-images.githubusercontent.com/40039040/209445919-c5dafdf2-c48e-48f6-9128-ea8818c52eb9.mp4
 
+## General Info
+
+This repo is a part of student project at Skoltech for the course Planning Algorithms in Artificial Intelligence. We implemented few different descrete planning algorithms, conducted performance tests and compared them.
+
 ## Requirements Lib
 
 ```
