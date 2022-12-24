@@ -224,7 +224,7 @@ def cost_maps(maps):
     return 0
          
 
-def astar(state: Control):
+def astar_base(state: Control, heur='none': string):
     stack = [[0, [state.start]], ]
     heap = [[0, state.start], ]
     costs = {tuple(tuple(x) for x in state.start) : (0, None)}
@@ -234,25 +234,15 @@ def astar(state: Control):
         _, current_state = heappop(heap)
         for _, current_maps in state.stack:
             if _ ==current_state:
-                break
-        #_, current_maps = state.stack
+                brea
         current_cost, _ = costs[tuple(tuple(x) for x in current_state)]
         state.visted.append((current_state, current_maps))
-        #print('beg',current_state,state.current)
         for move in state.moves:
             state.set_state(current_state, current_maps)
-            # if state.maps.maps[4][4].type==1:
-            #     print(move.__name__,state.current,'bridge')
-            # if current_maps[4][4].type==1:
-            #     print('\n'.join([''.join([str(y.type) for y in x]) for x in current_maps]))
             if move():
-                # if state.current==[[4,8]]:
-                #     print('\n'.join([''.join([str(y.type) for y in x]) for x in current_maps]))
-                # print(move.__name__,state.current,current_cost,len(heap))
                 if state.check_goal():
                     costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1, current_state)
                     path = []
-                    #print(state.current)
                     cur = state.current
                     while cur:
                         path.append(cur)
@@ -260,50 +250,21 @@ def astar(state: Control):
                     path.reverse()
                     return (path, step)
                 if tuple(tuple(x) for x in state.current) not in costs:
-                    #print('new',state.current)
                     costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1, current_state)
-                    #print(tuple(tuple(x) for x in state.current),costs[tuple(tuple(x) for x in state.current)])
-                    # if cost_maps(state.maps)>0:
-                    #     print('c',cost_maps(state.maps))
-                    heappush(heap, [current_cost + 1 + heuristic(state.current[0],state.end[0],'l1')- cost_maps(state.maps), state.current])
-                elif current_cost + 1 - cost_maps(state.maps)< costs[tuple(tuple(x) for x in state.current)][0]:
-                    #print('update',current_cost,'<-',costs[tuple(tuple(x) for x in state.current)][0])
-                    
-                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1- cost_maps(state.maps),current_state)
-                #print('cant')
-    #print('shiT!','\n'.join([str(x)+': '+str(y)+'\n' for x,y in costs.items()]),heap)
+                    heappush(heap, [current_cost + 1 + heuristic(state.current[0],state.end[0], heur)- cost_maps(state.maps), state.current])
+                elif current_cost + 1 - cost_maps(state.maps) < costs[tuple(tuple(x) for x in state.current)][0]:
+                    costs[tuple(tuple(x) for x in state.current)] = (current_cost + 1 - cost_maps(state.maps),current_state)
     return None, step
-#[[[3, 1]], [[3, 2], [3, 3]], [[4, 2], [4, 3]], [[4, 4]], [[4, 5], [4, 6]], [[4, 7]], [[3, 7], [2, 7]], [[3, 8], [2, 8]], [[4, 8]],
-# [[4, 9], [4, 10]], [[4, 11]], [[4, 12], [4, 13]], [[4, 14]], [[3, 14], [2, 14]], [[3, 13], [2, 13]], [[1, 13]]]
-                    
-
-# def astar(self,start,goal,env,rod,dist='A'):
-#     Q = []
-#     C = {}
-#     C_space = self.C_space(env,rod)
-#     heappush(Q,(0,start))
-#     C[start] = 0
-#     parent_table = {start:None}
-#     step=0
-#     while Q:
-#         step+=1
-#         now = heappop(Q)
-#         if now[1] == goal:
-#             print('Number of steps: {}\nFinal cost: {}'.format(step,C[goal]))
-#             return(self.plan(goal,parent_table))
-#         for neighbor in self.neighbors(now[1],C_space):
-#             if neighbor not in parent_table:
-#                 parent_table[neighbor]= now[1]
-#                 cost = C[now[1]]+1
-#                 C[neighbor]=cost
-#                 heappush(Q,(cost+self.distance(neighbor,goal,dist),neighbor))
-#             else:
-#                 if C[now[1]]+1<C[neighbor]:
-#                     C[neighbor] = C[now[1]]+1
-#                     parent_table[neighbor] = now
 
 
-            
+def dijkstra(state: Control):
+    return astar_base(state, 'none')
+
+
+def astar(state: Control):
+    return astar_base(state, 'l1')
+
+
 def handle(state: Control, map_size= (0,0)):
     state.Play_handle = True
     pygame.init()
