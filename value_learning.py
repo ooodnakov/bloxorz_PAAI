@@ -179,7 +179,7 @@ def ValueLearning(learn_rate=0.1, exp=0.5, N=100, M=100, level=Level.lv1):
 
 
 if __name__=="__main__":
-    if len(sys.argv) > 2:
+    if len(sys.argv) >= 1:
         level = sys.argv[1]
     V, str_res=ValueLearning(learn_rate=0.1, exp=0.2, N=1, M=100, level=level)   # you can change parameters here!
     Maps = maps(level)
