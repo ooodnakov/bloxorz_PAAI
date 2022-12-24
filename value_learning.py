@@ -176,14 +176,18 @@ def ValueLearning(learn_rate=0.1, exp=0.5, N=100, M=100, level=Level.lv1):
         str_res = "no wins"
     print(str_res)
     return V, str_res
-level=Level.lv1    #change level number here
-V, str_res=ValueLearning(learn_rate=0.1, exp=0.2, N=1, M=100, level=level)   # you can change parameters here!
-Maps = maps(level)
-size = Maps.size
-state = Control(Maps)
-path, r = walk(state, V=V, N=100, exp=0)
-result = [[list(j) for j in i] for i in path]
 
-draw_path_2D(result, level=level)
-print(str_res)
-print("Path length:,", len(path))
+
+if __name__=="__main__":
+    if len(sys.argv) > 2:
+        level = sys.argv[1]
+    V, str_res=ValueLearning(learn_rate=0.1, exp=0.2, N=1, M=100, level=level)   # you can change parameters here!
+    Maps = maps(level)
+    size = Maps.size
+    state = Control(Maps)
+    path, r = walk(state, V=V, N=100, exp=0)
+    result = [[list(j) for j in i] for i in path]
+
+    draw_path_2D(result, level=level)
+    print(str_res)
+    print("Path length:,", len(path))
