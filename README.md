@@ -19,3 +19,8 @@ $ python3 run.py path_to_level options view
     + 2 for view only on Consoles (Result of Path)
     + 3 for view only on 3D View (Result of Path)
     + 4 for view with performance metrics printout
+
+Example:
+```
+$ python3 run.py .level/1.json astar 2
+```
