@@ -234,7 +234,7 @@ def astar_base(state: Control, heur: str = 'none'):
         _, current_state = heappop(heap)
         for _, current_maps in state.stack:
             if _ ==current_state:
-                brea
+                break
         current_cost, _ = costs[tuple(tuple(x) for x in current_state)]
         state.visted.append((current_state, current_maps))
         for move in state.moves:
