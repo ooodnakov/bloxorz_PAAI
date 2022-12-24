@@ -224,7 +224,7 @@ def cost_maps(maps):
     return 0
          
 
-def astar_base(state: Control, heur='none': string):
+def astar_base(state: Control, heur: string = 'none'):
     stack = [[0, [state.start]], ]
     heap = [[0, state.start], ]
     costs = {tuple(tuple(x) for x in state.start) : (0, None)}
