@@ -22,5 +22,5 @@ $ python3 run.py path_to_level options view
 
 Example:
 ```
-$ python3 run.py .level/1.json astar 2
+$ python3 run.py ./level/1.json astar 2
 ```
